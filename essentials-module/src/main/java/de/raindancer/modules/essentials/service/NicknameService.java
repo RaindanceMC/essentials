@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 
 /**
@@ -66,6 +68,8 @@ public final class NicknameService implements IEssentialsService {
     private final Punishments punishments;
     private final Audit audit;
     private final BiConsumer<Player, Runnable> onOwnThread;
+    /** Where the shared store is read and written: never a thread running the world. */
+    private final Executor storage;
     private final NicknameRule rule = new NicknameRule();
 
     private volatile EssentialsSettings settings;
@@ -73,7 +77,8 @@ public final class NicknameService implements IEssentialsService {
     public NicknameService(EssentialsStore store, NicknameBlocklist blocklist,
                            Identities identities, Nicknames directory, Messages messages, Chat chat,
                            Server server, Punishments punishments, Audit audit,
-                           BiConsumer<Player, Runnable> onOwnThread, EssentialsSettings settings) {
+                           BiConsumer<Player, Runnable> onOwnThread, Executor storage,
+                           EssentialsSettings settings) {
         this.store = store;
         this.blocklist = blocklist;
         this.identities = identities;
@@ -84,6 +89,7 @@ public final class NicknameService implements IEssentialsService {
         this.punishments = punishments;
         this.audit = audit;
         this.onOwnThread = onOwnThread;
+        this.storage = storage;
         settings(settings);
     }
 
@@ -109,9 +115,9 @@ public final class NicknameService implements IEssentialsService {
      * Somebody setting their own, with the real-name check already done by the caller.
      *
      * @param nameInUse whether a real player already answers to this
-     * @return whether it took
+     * @return whether it took, once it is claimed in the shared store
      */
-    public boolean set(Player who, String typed, boolean nameInUse) {
+    public CompletableFuture<Boolean> set(Player who, String typed, boolean nameInUse) {
         return attempt(who, who, typed, nameInUse);
     }
 
@@ -119,12 +125,12 @@ public final class NicknameService implements IEssentialsService {
      * Sets it for {@code target} — themselves or, for whoever holds the others node, anybody the
      * server knows, online or not. Works out for itself whether the name would impersonate somebody.
      *
-     * @return whether it took
+     * @return whether it took, once it is claimed in the shared store
      */
-    public boolean set(CommandSender actor, OfflinePlayer target, String typed) {
+    public CompletableFuture<Boolean> set(CommandSender actor, OfflinePlayer target, String typed) {
         if (!isSelf(actor, target) && !actor.hasPermission(PermissionNodes.NICK_OTHERS)) {
             messages.send(actor, "essentials.nick.not-others", "player", PlayerTargets.shownName(target));
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
         return attempt(actor, target, typed, impersonates(target, Nickname.of(typed).plain()));
     }
@@ -145,7 +151,8 @@ public final class NicknameService implements IEssentialsService {
         return false;
     }
 
-    private boolean attempt(CommandSender actor, OfflinePlayer target, String typed, boolean nameInUse) {
+    private CompletableFuture<Boolean> attempt(CommandSender actor, OfflinePlayer target, String typed,
+                                               boolean nameInUse) {
         boolean self = isSelf(actor, target);
         Nickname nickname = Nickname.of(typed);
         // Staff who may skip the blocklist skip all of it, report and ban included — nobody is punished for
@@ -163,8 +170,20 @@ public final class NicknameService implements IEssentialsService {
             if (match != NicknameRule.BlockMatch.NONE && self && actor instanceof Player who) {
                 flag(who, nickname.plain(), match);
             }
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
+        CompletableFuture<Boolean> took = new CompletableFuture<>();
+        storage.execute(() -> {
+            try {
+                took.complete(claim(actor, target, nickname, self));
+            } catch (RuntimeException failure) {
+                took.completeExceptionally(failure);
+            }
+        });
+        return took;
+    }
+
+    private boolean claim(CommandSender actor, OfflinePlayer target, Nickname nickname, boolean self) {
         // Claimed against the shared store in one step, not just checked: a server that has not heard of
         // somebody else's nickname yet cannot hand out the same one.
         switch (store.claimNickname(target.getUniqueId(), nickname.raw())) {
@@ -218,7 +237,7 @@ public final class NicknameService implements IEssentialsService {
             return false;
         }
         store.clearNickname(target.getUniqueId());
-        store.flush();
+        storage.execute(store::flush);
         directory.clear(target.getUniqueId());
         Player online = target instanceof Player here ? here : target.getPlayer();
         if (online != null) {

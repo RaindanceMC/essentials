@@ -120,10 +120,13 @@ public final class NickMenu extends Menu {
      * the thread that owns them. See the class note.
      */
     private void onAnswered(String typed) {
-        Scheduling.entity(services.plugin(), viewer, () -> {
-            services.nicknames().set(viewer, viewer, typed);
-            new NickMenu(services, viewer, parent()).open();
-        });
+        Scheduling.entity(services.plugin(), viewer, () -> services.nicknames().set(viewer, viewer, typed)
+                .whenComplete((took, failure) -> reopenWhenStored()));
+    }
+
+    /** Back on the viewer's thread once the shared store has answered, showing what it now says. */
+    private void reopenWhenStored() {
+        Scheduling.entity(services.plugin(), viewer, () -> new NickMenu(services, viewer, parent()).open());
     }
 
     /**
@@ -138,10 +141,10 @@ public final class NickMenu extends Menu {
                         boolean off = typed.strip().equalsIgnoreCase("clear") || typed.strip().equalsIgnoreCase("off");
                         if (off) {
                             services.nicknames().clear(viewer, target);
+                            new NickMenu(services, viewer, parent()).open();
                         } else {
-                            services.nicknames().set(viewer, target, typed);
+                            services.nicknames().set(viewer, target, typed).whenComplete((took, failure) -> reopenWhenStored());
                         }
-                        new NickMenu(services, viewer, parent()).open();
                     }), this::reopenElsewhere);
             if (!asked) {
                 services.chat().tell(viewer,

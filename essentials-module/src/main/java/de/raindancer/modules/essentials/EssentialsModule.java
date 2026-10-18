@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.29.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.29.1")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -134,7 +134,8 @@ public final class EssentialsModule implements FlexModule {
         NicknameService nicknames = new NicknameService(store, blocklist,
                 context.core().identities(), context.core().nicknames(), context.core().messages(),
                 context.chat(), server, context.core().punishments(), context.core().audit(),
-                (who, task) -> Scheduling.onOwner(context.plugin(), who, task), settings.current());
+                (who, task) -> Scheduling.onOwner(context.plugin(), who, task),
+                task -> Scheduling.async(context.plugin(), task), settings.current());
         // Nicknames and ignores are the player's on every server: reloaded when another writes them, and a
         // nickname somebody else changed is redrawn on whoever is online here.
         var storeWatch = store.watch(() -> {

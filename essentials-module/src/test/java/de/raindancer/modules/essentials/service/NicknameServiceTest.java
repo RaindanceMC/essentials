@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -75,7 +77,7 @@ class NicknameServiceTest {
 
     private NicknameService serviceWith(NicknameBlocklist blocklist, EssentialsSettings settings) {
         return new NicknameService(store, blocklist, identities, directory, messages, chat, server,
-                punishments, audit, (who, task) -> task.run(), settings);
+                punishments, audit, (who, task) -> task.run(), Runnable::run, settings);
     }
 
     private Player player(String name) {
@@ -105,7 +107,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            boolean set = service.set(who, "Forbidden Name", false);
+            boolean set = service.set(who, "Forbidden Name", false).join();
 
             assertThat(set).isFalse();
             assertThat(store.nicknameOf(who.getUniqueId())).isEmpty();
@@ -126,7 +128,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            service.set(who, "Forbidden Name", false);
+            service.set(who, "Forbidden Name", false).join();
 
             verify(audit).record(org.mockito.ArgumentMatchers
                     .<de.raindancer.core.moderation.audit.AuditEntry.Builder>any());
@@ -145,7 +147,7 @@ class NicknameServiceTest {
             NicknameService service = serviceWith(blocklist);
             Player who = player("Tom");
 
-            boolean set = service.set(who, "Forbidden Name", false);
+            boolean set = service.set(who, "Forbidden Name", false).join();
 
             assertThat(set).isTrue();
         }
@@ -169,7 +171,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            boolean set = service.set(who, "Severe Name", false);
+            boolean set = service.set(who, "Severe Name", false).join();
 
             assertThat(set).isFalse();
             verify(punishments).punish(eq(who.getUniqueId()), eq(PunishmentKind.BAN), eq(null),
@@ -193,7 +195,7 @@ class NicknameServiceTest {
                     .thenReturn(true);
             org.mockito.Mockito.doReturn(List.of(staff)).when(server).getOnlinePlayers();
 
-            service.set(who, "Severe Name", false);
+            service.set(who, "Severe Name", false).join();
 
             verify(audit).record(org.mockito.ArgumentMatchers
                     .<de.raindancer.core.moderation.audit.AuditEntry.Builder>any());
@@ -217,7 +219,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            boolean set = service.set(who, "<red>BLOCKED</red>", false);
+            boolean set = service.set(who, "<red>BLOCKED</red>", false).join();
 
             assertThat(set).isFalse();
             verify(punishments).punish(any(), eq(PunishmentKind.BAN), any(), any(), any());
@@ -242,7 +244,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            service.set(who, "both", false);
+            service.set(who, "both", false).join();
 
             verify(punishments).punish(any(), eq(PunishmentKind.BAN), any(), any(), any());
         }
@@ -261,7 +263,7 @@ class NicknameServiceTest {
         NicknameService service = serviceWith(blocklist);
         Player who = player("Tom");
 
-        boolean set = service.set(who, "Foxy", false);
+        boolean set = service.set(who, "Foxy", false).join();
 
         assertThat(set).isTrue();
         assertThat(store.nicknameOf(who.getUniqueId())).contains("Foxy");
@@ -283,7 +285,7 @@ class NicknameServiceTest {
         Player who = player("Tom");
         when(server.getOnlinePlayers()).thenReturn(List.of());
 
-        service.set(who, "waytoolongname", false);
+        service.set(who, "waytoolongname", false).join();
 
         verify(punishments).punish(any(), eq(PunishmentKind.BAN), any(), any(), any());
     }
@@ -299,7 +301,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            service.set(who, "<red>Rain", false);
+            service.set(who, "<red>Rain", false).join();
 
             verify(identities).setNickname(who.getUniqueId(), "Rain");
         }
@@ -312,7 +314,7 @@ class NicknameServiceTest {
             Player who = player("Tom");
             when(server.getOnlinePlayers()).thenReturn(List.of());
 
-            service.set(who, "Rain", false);
+            service.set(who, "Rain", false).join();
 
             verify(identities, never()).setNickname(eq(who.getUniqueId()), eq("Rain"));
             verify(identities).setNickname(who.getUniqueId(), null);
@@ -329,7 +331,7 @@ class NicknameServiceTest {
             NicknameService service = serviceWith(blocklistOf(folder, "{}"));
             Player who = player("Tom");
 
-            service.set(who, "<red>Foxy", false);
+            service.set(who, "<red>Foxy", false).join();
 
             verify(directory).remember(who.getUniqueId(), "Foxy");
         }
@@ -339,7 +341,7 @@ class NicknameServiceTest {
         void selfClearIsForgotten(@TempDir Path folder) {
             NicknameService service = serviceWith(blocklistOf(folder, "{}"));
             Player who = player("Tom");
-            service.set(who, "Foxy", false);
+            service.set(who, "Foxy", false).join();
 
             service.clear(who);
 
@@ -388,7 +390,7 @@ class NicknameServiceTest {
             NicknameService service = serviceWith(blocklistOf(folder, "{}"));
             OfflinePlayer target = offline("Tom");
 
-            boolean set = service.set(admin(), target, "Foxy");
+            boolean set = service.set(admin(), target, "Foxy").join();
 
             assertThat(set).isFalse();
             assertThat(store.nicknameOf(target.getUniqueId())).isEmpty();
@@ -402,7 +404,7 @@ class NicknameServiceTest {
             OfflinePlayer target = offline("Tom");
             when(target.getPlayer()).thenReturn(null);
 
-            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy");
+            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy").join();
 
             assertThat(set).isTrue();
             assertThat(store.nicknameOf(target.getUniqueId())).contains("Foxy");
@@ -419,7 +421,7 @@ class NicknameServiceTest {
             Player target = player("Tom");
             when(target.getPlayer()).thenReturn(target);
 
-            service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy");
+            service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy").join();
 
             verify(identities).setNickname(target.getUniqueId(), "Foxy");
             verify(messages).send(eq(target), eq("essentials.nick.set-by-staff"), any(Object[].class));
@@ -434,7 +436,7 @@ class NicknameServiceTest {
             when(server.getOfflinePlayerIfCached("Notch")).thenReturn(notch);
 
             boolean set = service.set(admin(PermissionNodes.NICK_OTHERS, PermissionNodes.NICK_BYPASS_BLOCKLIST),
-                    target, "Notch");
+                    target, "Notch").join();
 
             assertThat(set).isFalse();
             verify(messages).send(any(CommandSender.class), eq("essentials.nick.taken"), any(Object[].class));
@@ -447,7 +449,7 @@ class NicknameServiceTest {
             OfflinePlayer target = offline("Tom");
             when(server.getOfflinePlayerIfCached("tom")).thenReturn(target);
 
-            assertThat(service.set(admin(PermissionNodes.NICK_OTHERS), target, "tom")).isTrue();
+            assertThat(service.set(admin(PermissionNodes.NICK_OTHERS), target, "tom").join()).isTrue();
         }
 
         @Test
@@ -457,7 +459,7 @@ class NicknameServiceTest {
             OfflinePlayer target = offline("Tom");
             when(directory.ownersOf("Foxy")).thenReturn(List.of(UUID.randomUUID()));
 
-            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy");
+            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy").join();
 
             assertThat(set).isFalse();
             verify(messages).send(any(CommandSender.class), eq("essentials.nick.nick-taken"), any(Object[].class));
@@ -471,7 +473,7 @@ class NicknameServiceTest {
             store.setNickname(UUID.randomUUID(), "<gold>Foxy</gold>");
             store.flush();
 
-            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "foxy");
+            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "foxy").join();
 
             assertThat(set).isFalse();
             assertThat(store.nicknameOf(target.getUniqueId())).isEmpty();
@@ -486,7 +488,7 @@ class NicknameServiceTest {
             UUID owner = target.getUniqueId();
             when(directory.ownersOf("Foxy")).thenReturn(List.of(owner));
 
-            assertThat(service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy")).isTrue();
+            assertThat(service.set(admin(PermissionNodes.NICK_OTHERS), target, "Foxy").join()).isTrue();
         }
 
         @Test
@@ -502,7 +504,7 @@ class NicknameServiceTest {
             NicknameService service = serviceWith(blocklist);
             OfflinePlayer target = offline("Tom");
 
-            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "Severe Name");
+            boolean set = service.set(admin(PermissionNodes.NICK_OTHERS), target, "Severe Name").join();
 
             assertThat(set).isFalse();
             verify(punishments, never()).punish(any(), any(), any(), any(), any());
@@ -522,7 +524,7 @@ class NicknameServiceTest {
             OfflinePlayer target = offline("Tom");
 
             assertThat(service.set(admin(PermissionNodes.NICK_OTHERS, PermissionNodes.NICK_BYPASS_BLOCKLIST),
-                    target, "Forbidden Name")).isTrue();
+                    target, "Forbidden Name").join()).isTrue();
         }
 
         @Test
@@ -550,6 +552,72 @@ class NicknameServiceTest {
             assertThat(service.clear(admin(PermissionNodes.NICK_OTHERS), target)).isFalse();
             verify(messages).send(any(CommandSender.class), eq("essentials.nick.none-to-clear"),
                     any(Object[].class));
+        }
+    }
+
+    @Nested
+    @DisplayName("the shared store")
+    class OffTheServerThread {
+
+        private final List<Runnable> later = new ArrayList<>();
+
+        private NicknameService deferring(Path folder) {
+            return new NicknameService(store, blocklistOf(folder, "{}"), identities, directory, messages, chat,
+                    server, punishments, audit, (who, task) -> task.run(), later::add, EssentialsSettings.DEFAULTS);
+        }
+
+        private void runLater() {
+            List<Runnable> due = List.copyOf(later);
+            later.clear();
+            due.forEach(Runnable::run);
+        }
+
+        @Test
+        @DisplayName("a nickname is claimed on the storage thread, and only then said to be set")
+        void claimWaitsForStorage(@TempDir Path folder) {
+            NicknameService service = deferring(folder);
+            Player who = player("Tom");
+            when(server.getOnlinePlayers()).thenReturn(List.of());
+
+            CompletableFuture<Boolean> set = service.set(who, who, "Foxy");
+
+            assertThat(set).isNotDone();
+            assertThat(store.nicknameOf(who.getUniqueId())).isEmpty();
+            verify(messages, never()).send(any(CommandSender.class), eq("essentials.nick.set"), any(Object[].class));
+
+            runLater();
+
+            assertThat(set).isCompletedWithValue(true);
+            assertThat(store.nicknameOf(who.getUniqueId())).contains("Foxy");
+            verify(messages).send(any(CommandSender.class), eq("essentials.nick.set"), any(Object[].class));
+        }
+
+        @Test
+        @DisplayName("a refusal needs no storage and is answered at once")
+        void refusalIsImmediate(@TempDir Path folder) {
+            NicknameService service = deferring(folder);
+            Player who = player("Tom");
+
+            CompletableFuture<Boolean> set = service.set(who, who, "x".repeat(200));
+
+            assertThat(set).isCompletedWithValue(false);
+            assertThat(later).isEmpty();
+        }
+
+        @Test
+        @DisplayName("clearing takes it off at once and writes it on the storage thread")
+        void clearWritesLater(@TempDir Path folder) {
+            NicknameService service = deferring(folder);
+            Player who = player("Tom");
+            service.set(who, who, "Foxy");
+            runLater();
+
+            boolean cleared = service.clear(who, who);
+
+            assertThat(cleared).isTrue();
+            assertThat(store.nicknameOf(who.getUniqueId())).isEmpty();
+            assertThat(later).hasSize(1);
+            assertThat(store.flush()).isTrue();
         }
     }
 }
