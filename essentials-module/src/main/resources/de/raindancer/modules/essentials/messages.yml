@@ -110,6 +110,11 @@ essentials:
     cleared-other: "<green>Stripped <white><count></white> enchantment(s) off <white><player></white>'s item."
     nothing-to-clear: "<gray>There is nothing on it to strip."
 
+  # ── /disenchant ───────────────────────────────────────────────────────────
+  disenchant:
+    nothing-held: "<red>Nothing in the hand to disenchant."
+    cursed: "<red>Curses stick: <white><enchantment></white> does not come off by command."
+
   # ── /repair and /repairall ────────────────────────────────────────────────
   tokens:
     sky-cleared: "<yellow><player></yellow> <gray>used a Clear Sky Token. The clouds have somewhere else to be."

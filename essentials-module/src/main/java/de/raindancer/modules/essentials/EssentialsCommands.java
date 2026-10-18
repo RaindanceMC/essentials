@@ -86,6 +86,11 @@ public final class EssentialsCommands {
                         .taking("(nothing) — opens a list to pick from",
                                 "<enchantment> [level] [player] — level 0 or remove takes it off",
                                 "clear [player] — takes every enchantment off"),
+                ModuleCommand.of("disenchant", "Takes enchantments off the item in your hand",
+                                new de.raindancer.modules.essentials.command.DisenchantCommand(EssentialsCommands::require))
+                        .taking("<enchantment> — that one off; tab shows what is on the item",
+                                "all — everything but curses",
+                                "<enchantment|all> <player> — somebody else's, for staff"),
                 ModuleCommand.of("repair", "Repairs the item in your hand",
                                 new RepairCommand(EssentialsCommands::require, false))
                         .taking("[player] — somebody else's, for staff"),

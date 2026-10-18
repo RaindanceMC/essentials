@@ -82,7 +82,7 @@
         <!-- 1.27.0 (network): the welcome and the rules are shown once per player on the whole network, not on every server they first visit; /fun cooldowns follow the player; /token reaches a player on another server and the profile "Message" button offers /msg for one. -->
         <!-- 1.28.1: whether somebody is in admin mode is read while they log in, not on the server thread as they join. -->
         <!-- 1.28.2: what was read for a login that never became a join is forgotten (security review). -->
-        <plugin.version>1.28.2</plugin.version>
+        <plugin.version>1.29.0</plugin.version>
     </properties>
 
     <dependencies>

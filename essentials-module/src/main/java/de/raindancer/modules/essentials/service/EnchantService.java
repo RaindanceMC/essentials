@@ -6,6 +6,7 @@ import de.raindancer.core.platform.command.PlayerTargets;
 import de.raindancer.core.platform.rule.Verdict;
 import de.raindancer.core.ui.messages.Messages;
 import de.raindancer.modules.essentials.EssentialsSettings;
+import de.raindancer.modules.essentials.rules.DisenchantRule;
 import de.raindancer.modules.essentials.rules.EnchantRule;
 import de.raindancer.modules.essentials.util.Enchantments;
 import de.raindancer.modules.essentials.util.PermissionNodes;
@@ -33,6 +34,7 @@ public final class EnchantService implements IEssentialsService {
     private final Audit audit;
     private final BiConsumer<Player, Runnable> onOwnThread;
     private final EnchantRule rule = new EnchantRule();
+    private final DisenchantRule disenchantRule = new DisenchantRule();
 
     public EnchantService(Messages messages, Audit audit, BiConsumer<Player, Runnable> onOwnThread,
                           EssentialsSettings settings) {
@@ -115,8 +117,50 @@ public final class EnchantService implements IEssentialsService {
         return true;
     }
 
+    /** {@code /disenchant}: one enchantment off what the target holds, curses only for who may lift them. */
+    public boolean disenchant(CommandSender actor, Player target, Enchantment enchantment) {
+        boolean[] done = {false};
+        onOwnThread.accept(target, () -> {
+            ItemStack held = target.getInventory().getItemInMainHand();
+            boolean holding = held != null && !held.isEmpty();
+            Verdict verdict = disenchantRule.judge(DisenchantRule.Request.builder()
+                    .self(isSelf(actor, target))
+                    .mayOthers(actor.hasPermission(PermissionNodes.ENCHANT_OTHERS))
+                    .holding(holding)
+                    .present(holding && levelOn(held, enchantment) > 0)
+                    .cursed(enchantment.isCursed())
+                    .mayCurses(actor.hasPermission(PermissionNodes.DISENCHANT_CURSES))
+                    .build());
+            if (verdict.isRefused()) {
+                messages.send(actor, verdict.reason(), "player", PlayerTargets.shownName(target),
+                        "enchantment", Enchantments.readable(enchantment));
+                return;
+            }
+            done[0] = applyHere(actor, target, enchantment, 0);
+        });
+        return done[0];
+    }
+
+    /** What is on the held item — stored ones for a book — key as typed to whether it is a curse. */
+    public static java.util.Map<String, Boolean> onItem(ItemStack held) {
+        java.util.Map<String, Boolean> found = new java.util.LinkedHashMap<>();
+        if (held == null || held.isEmpty()) {
+            return found;
+        }
+        java.util.Map<Enchantment, Integer> enchantments = held.getItemMeta() instanceof EnchantmentStorageMeta storage
+                ? storage.getStoredEnchants() : held.getEnchantments();
+        enchantments.keySet().stream().sorted(java.util.Comparator.comparing(Enchantments::keyOf))
+                .forEach(enchantment -> found.put(Enchantments.keyOf(enchantment), enchantment.isCursed()));
+        return found;
+    }
+
     /** Takes every enchantment off the held item. */
     public void clear(CommandSender actor, Player target) {
+        clear(actor, target, true);
+    }
+
+    /** @param curses whether curses come off too — {@code /disenchant all} leaves them unless one may lift them */
+    public void clear(CommandSender actor, Player target, boolean curses) {
         onOwnThread.accept(target, () -> {
             ItemStack held = target.getInventory().getItemInMainHand();
             boolean holding = held != null && !held.isEmpty();
@@ -133,6 +177,9 @@ public final class EnchantService implements IEssentialsService {
             List<Enchantment> present = new ArrayList<>(item.getEnchantments().keySet());
             if (item.getItemMeta() instanceof EnchantmentStorageMeta storage) {
                 present.addAll(storage.getStoredEnchants().keySet());
+            }
+            if (!curses) {
+                present.removeIf(Enchantment::isCursed);
             }
             if (present.isEmpty()) {
                 messages.send(actor, "essentials.enchant.nothing-to-clear", "player", PlayerTargets.shownName(target));

@@ -36,6 +36,8 @@ public final class PermissionNodes {
     public static final String ENCHANT_BEYOND_MAX = "essentials.enchant.beyond-max";
     public static final String ENCHANT_ANY_ITEM = "essentials.enchant.any-item";
     public static final String ENCHANT_OTHERS = "essentials.enchant.others";
+    public static final String DISENCHANT = "essentials.disenchant";
+    public static final String DISENCHANT_CURSES = "essentials.disenchant.curses";
 
     public static final String REPAIR = "essentials.repair";
     public static final String REPAIR_ALL = "essentials.repair.all";
@@ -92,6 +94,9 @@ public final class PermissionNodes {
                 new Permission(ENCHANT_ANY_ITEM, "Put an enchantment on an item it does not normally fit",
                         PermissionDefault.OP),
                 new Permission(ENCHANT_OTHERS, "Enchant what somebody else is holding", PermissionDefault.OP),
+                new Permission(DISENCHANT, "Take enchantments off the item in your hand with /disenchant",
+                        PermissionDefault.TRUE),
+                new Permission(DISENCHANT_CURSES, "Take curses off with /disenchant", PermissionDefault.OP),
                 new Permission(REPAIR, "Repair the item in your hand with /repair", PermissionDefault.OP),
                 new Permission(REPAIR_ALL, "Repair everything you carry with /repairall", PermissionDefault.OP),
                 new Permission(REPAIR_OTHERS, "Repair somebody else's items", PermissionDefault.OP),
