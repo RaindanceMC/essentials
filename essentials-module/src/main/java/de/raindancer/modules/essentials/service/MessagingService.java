@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -40,6 +41,7 @@ import java.util.function.Supplier;
 public final class MessagingService implements IEssentialsService {
 
     private final EssentialsStore store;
+    private final Executor storage;
     private final Messages messages;
     private final Chat chat;
     private final Vanish vanish;
@@ -90,7 +92,14 @@ public final class MessagingService implements IEssentialsService {
 
     public MessagingService(EssentialsStore store, Messages messages, Chat chat, Vanish vanish,
                             EssentialsSettings settings) {
+        this(store, messages, chat, vanish, Runnable::run, settings);
+    }
+
+    /** @param storage where the shared store is written: never a thread running the world */
+    public MessagingService(EssentialsStore store, Messages messages, Chat chat, Vanish vanish,
+                            Executor storage, EssentialsSettings settings) {
         this.store = store;
+        this.storage = storage;
         this.messages = messages;
         this.chat = chat;
         this.vanish = vanish;
@@ -269,13 +278,13 @@ public final class MessagingService implements IEssentialsService {
      */
     public boolean ignore(Player who, UUID target) {
         boolean changed = store.ignore(who.getUniqueId(), target);
-        store.flush();
+        storage.execute(store::flush);
         return changed;
     }
 
     public boolean stopIgnoring(Player who, UUID target) {
         boolean changed = store.stopIgnoring(who.getUniqueId(), target);
-        store.flush();
+        storage.execute(store::flush);
         return changed;
     }
 

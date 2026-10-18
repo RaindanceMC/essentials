@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.29.2")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.29.3")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -104,7 +104,8 @@ public final class EssentialsModule implements FlexModule {
         de.raindancer.core.social.presence.Away.watch(away);
         context.closeWith(() -> de.raindancer.core.social.presence.Away.unwatch(away));
         MessagingService messaging = new MessagingService(store, context.core().messages(),
-                context.chat(), context.core().vanish(), settings.current());
+                context.chat(), context.core().vanish(), task -> Scheduling.async(context.plugin(), task),
+                settings.current());
         if (context.core().networkPlayers().isPresent() && context.core().networkCalls().isPresent()) {
             // On a network the link stands down: players are found and messaged over the network's own calls.
             messaging.connectNetwork(MessagingService.Directory.of(context.core().networkPlayers().get()),

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -151,5 +153,52 @@ class MessagingServiceTest {
 
         assertThat(service.replyTarget(from.getUniqueId())).isEmpty();
         assertThat(service.isIgnoring(to.getUniqueId(), from.getUniqueId())).isTrue();
+    }
+
+    @Nested
+    @DisplayName("the shared store")
+    class OffTheServerThread {
+
+        private final Path folder = Path.of("target", "test-essentials-deferred", UUID.randomUUID().toString());
+        private final EssentialsStore deferredStore = new EssentialsStore(folder);
+        private final List<Runnable> later = new ArrayList<>();
+        private final MessagingService deferring = new MessagingService(deferredStore, messages, chat, vanish,
+                later::add, EssentialsSettings.DEFAULTS);
+
+        private boolean storedIgnoring(UUID who, UUID target) {
+            EssentialsStore fresh = new EssentialsStore(folder);
+            fresh.load();
+            return fresh.isIgnoring(who, target);
+        }
+
+        @Test
+        @DisplayName("blocking answers at once and is written on the storage thread")
+        void ignoreWritesLater() {
+            Player who = player("Tom");
+            UUID target = UUID.randomUUID();
+
+            assertThat(deferring.ignore(who, target)).isTrue();
+
+            assertThat(deferring.isIgnoring(who.getUniqueId(), target)).isTrue();
+            assertThat(storedIgnoring(who.getUniqueId(), target)).isFalse();
+            later.forEach(Runnable::run);
+            assertThat(storedIgnoring(who.getUniqueId(), target)).isTrue();
+        }
+
+        @Test
+        @DisplayName("unblocking too")
+        void stopIgnoringWritesLater() {
+            Player who = player("Tom");
+            UUID target = UUID.randomUUID();
+            deferring.ignore(who, target);
+            later.forEach(Runnable::run);
+            later.clear();
+
+            assertThat(deferring.stopIgnoring(who, target)).isTrue();
+
+            assertThat(storedIgnoring(who.getUniqueId(), target)).isTrue();
+            later.forEach(Runnable::run);
+            assertThat(storedIgnoring(who.getUniqueId(), target)).isFalse();
+        }
     }
 }

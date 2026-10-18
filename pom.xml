@@ -20,7 +20,7 @@
 
     <!-- This repository's own versions: bump them here. CI publishes a new version on the next push to master. -->
     <properties>
-        <essentials-module.version>1.29.2</essentials-module.version>
+        <essentials-module.version>1.29.3</essentials-module.version>
     </properties>
 
     <modules>
