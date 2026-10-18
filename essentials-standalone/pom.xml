@@ -85,7 +85,8 @@
         <!-- 1.29.1: /nick claims the name in the shared store off the server thread; the menus reopen once it is stored. -->
         <!-- 1.29.2: [AFK] comes off at the first step or word even when this server never put it on (another server, a restart, a quit while away), and leaving while AFK takes it off. -->
         <!-- 1.29.3: /ignore and /unignore write the shared store off the server thread. -->
-        <plugin.version>1.29.3</plugin.version>
+        <!-- 1.30.0: /admin <player> switches somebody else's admin mode (essentials.admin.others). -->
+        <plugin.version>1.30.0</plugin.version>
     </properties>
 
     <dependencies>

@@ -31,6 +31,10 @@ public final class AdminCommand implements IEssentialsCommand {
     @Override
     public void execute(CommandSourceStack source, String[] args) {
         EssentialsServices live = services.get();
+        if (args.length > 0 && !KEYWORDS.contains(args[0].toLowerCase(Locale.ROOT))) {
+            someoneElse(live, source.getSender(), args[0]);
+            return;
+        }
         if (!(source.getSender() instanceof Player player)) {
             live.messages().send(source.getSender(), "essentials.only-a-player");
             return;
@@ -61,14 +65,48 @@ public final class AdminCommand implements IEssentialsCommand {
                     live.messages().send(player, on ? "essentials.admin.bypass-on" : "essentials.admin.bypass-off");
                 }
             }
-            default -> live.messages().send(player, "essentials.usage", "usage", "/admin [on|off|status|bypass]");
+            default -> live.messages().send(player, "essentials.usage", "usage", "/admin [on|off|status|bypass|<player>]");
         }
+    }
+
+    private static final List<String> KEYWORDS = List.of("on", "off", "status", "bypass");
+
+    /** /admin <player>: their admin mode switched, they are told by the switch itself. */
+    private static void someoneElse(EssentialsServices live, org.bukkit.command.CommandSender sender, String name) {
+        if (!sender.hasPermission(de.raindancer.modules.essentials.util.PermissionNodes.ADMIN_OTHERS)) {
+            live.messages().send(sender, "essentials.no-permission");
+            return;
+        }
+        var found = de.raindancer.modules.essentials.util.Players.one(live.messages(), live.server(), sender, name);
+        if (found.isEmpty()) {
+            return;
+        }
+        Player target = found.get().getPlayer();
+        if (target == null) {
+            live.messages().send(sender, "essentials.admin.other-offline", "player", name);
+            return;
+        }
+        boolean wasIn = live.adminMode().isInAdminMode(target.getUniqueId());
+        if (!live.adminMode().toggle(target)) {
+            live.messages().send(sender, "essentials.admin.other-refused", "player", target.getName());
+            return;
+        }
+        live.core().audit().record(de.raindancer.core.moderation.audit.AuditEntry.of("essentials",
+                        wasIn ? "switched somebody's admin mode off" : "switched somebody's admin mode on")
+                .by(sender instanceof Player by ? by.getUniqueId() : null, sender.getName())
+                .to(target.getUniqueId(), target.getName()));
+        live.messages().send(sender, wasIn ? "essentials.admin.other-off" : "essentials.admin.other-on",
+                "player", target.getName());
     }
 
     @Override
     public Collection<String> suggest(CommandSourceStack source, String[] args) {
         String typed = args.length == 0 ? "" : args[0].toLowerCase(Locale.ROOT);
         return args.length > 1 ? List.of()
-                : List.of("on", "off", "status", "bypass").stream().filter(word -> word.startsWith(typed)).toList();
+                : java.util.stream.Stream.concat(KEYWORDS.stream(),
+                        source.getSender().hasPermission(de.raindancer.modules.essentials.util.PermissionNodes.ADMIN_OTHERS)
+                                ? services.get().server().getOnlinePlayers().stream().map(Player::getName)
+                                : java.util.stream.Stream.<String>empty())
+                        .filter(word -> word.toLowerCase(Locale.ROOT).startsWith(typed)).toList();
     }
 }

@@ -62,6 +62,9 @@ public final class PermissionNodes {
     /** Going into admin mode. Coming out never needs anything. */
     public static final String ADMIN_MODE = "essentials.admin";
 
+    /** Switching somebody else's admin mode: /admin <player>. */
+    public static final String ADMIN_OTHERS = "essentials.admin.others";
+
     /** In admin mode, lift keeping admin items apart with /admin bypass. */
     public static final String ADMIN_BYPASS = "essentials.admin.bypass";
 
@@ -115,6 +118,8 @@ public final class PermissionNodes {
                 new Permission(RULES, "Read the server's rules with /rules", PermissionDefault.TRUE),
                 new Permission(RULES_MANAGE, "Edit the server's rules and their presets", PermissionDefault.OP),
                 new Permission(ADMIN_MODE, "Switch to a separate admin inventory with /admin",
+                        PermissionDefault.OP),
+                new Permission(ADMIN_OTHERS, "Switch somebody else's admin mode with /admin <player>",
                         PermissionDefault.OP),
                 new Permission(ADMIN_BYPASS, "In admin mode, lift keeping admin items apart with /admin bypass",
                         PermissionDefault.OP));
