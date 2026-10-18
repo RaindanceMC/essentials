@@ -76,6 +76,10 @@ public final class AfkService implements IEssentialsService {
         lastActivity.put(who.getUniqueId(), clock.getAsLong());
         if (afk.remove(who.getUniqueId())) {
             announce(who, false);
+        } else if (identities.nametagPrefix(who.getUniqueId()).filter(PREFIX::equals).isPresent()) {
+            // Core keeps the tag with the player: put on by another server, or before a restart or a quit,
+            // it is nobody's here to take off.
+            identities.setNametagPrefix(who.getUniqueId(), "");
         }
     }
 
@@ -133,7 +137,9 @@ public final class AfkService implements IEssentialsService {
             return;
         }
         lastActivity.remove(who);
-        afk.remove(who);
+        if (afk.remove(who)) {
+            identities.setNametagPrefix(who, "");
+        }
     }
 
     @Override

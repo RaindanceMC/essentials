@@ -10,11 +10,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class AfkServiceTest {
@@ -136,5 +141,46 @@ class AfkServiceTest {
         disabled.sweep(List.of(who));
 
         assertThat(disabled.isAfk(who.getUniqueId())).isFalse();
+    }
+
+    @Nested
+    @DisplayName("a tag left behind")
+    class Leftover {
+
+        @Test
+        @DisplayName("comes off at the first activity, quietly, when this server never marked them")
+        void staleTagComesOff() {
+            Player who = player(UUID.randomUUID(), "Tom");
+            when(identities.nametagPrefix(who.getUniqueId())).thenReturn(Optional.of("<gray>[AFK] "));
+
+            service.activity(who);
+
+            verify(identities).setNametagPrefix(who.getUniqueId(), "");
+            verify(chat, never()).broadcast(any(), any(net.kyori.adventure.text.minimessage.tag.resolver.TagResolver[].class));
+            verify(messages, never()).send(any(Player.class), any(String.class), any(Object[].class));
+        }
+
+        @Test
+        @DisplayName("somebody else's nametag prefix is left alone")
+        void othersPrefixKept() {
+            Player who = player(UUID.randomUUID(), "Tom");
+            when(identities.nametagPrefix(who.getUniqueId())).thenReturn(Optional.of("<red>[V] "));
+
+            service.activity(who);
+
+            verify(identities, never()).setNametagPrefix(eq(who.getUniqueId()), any());
+        }
+
+        @Test
+        @DisplayName("leaving while AFK takes the tag off, so it does not come back with them")
+        void quittingClearsIt() {
+            Player who = player(UUID.randomUUID(), "Tom");
+            service.toggle(who);
+
+            service.forget(who.getUniqueId());
+
+            verify(identities).setNametagPrefix(who.getUniqueId(), "");
+            assertThat(service.isAfk(who.getUniqueId())).isFalse();
+        }
     }
 }

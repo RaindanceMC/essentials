@@ -83,7 +83,8 @@
         <!-- 1.28.1: whether somebody is in admin mode is read while they log in, not on the server thread as they join. -->
         <!-- 1.28.2: what was read for a login that never became a join is forgotten (security review). -->
         <!-- 1.29.1: /nick claims the name in the shared store off the server thread; the menus reopen once it is stored. -->
-        <plugin.version>1.29.1</plugin.version>
+        <!-- 1.29.2: [AFK] comes off at the first step or word even when this server never put it on (another server, a restart, a quit while away), and leaving while AFK takes it off. -->
+        <plugin.version>1.29.2</plugin.version>
     </properties>
 
     <dependencies>
