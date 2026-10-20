@@ -30,6 +30,8 @@ public final class AdminModeService implements IEssentialsService {
 
     public static final String SURVIVAL = "survival";
     public static final String ADMIN = "admin";
+    /** Admin mode's lease on Core's flight. */
+    public static final String FLIGHT_SOURCE = "essentials-admin";
     private static final String BAR = "essentials-admin-mode";
     private static final de.raindancer.core.platform.log.LogChannel log =
             de.raindancer.core.platform.log.Log.of("essentials");
@@ -43,6 +45,7 @@ public final class AdminModeService implements IEssentialsService {
     private final BiConsumer<Player, Loadout.Place> moveTo;
     private volatile EssentialsSettings settings;
     private final LandBypass land;
+    private final de.raindancer.core.world.movement.Flight flight;
     /** The claim bypass, switched on by going in — so coming out switches off only what going in switched on. */
     private final Set<UUID> landBypassByUs = ConcurrentHashMap.newKeySet();
 
@@ -75,6 +78,15 @@ public final class AdminModeService implements IEssentialsService {
     public AdminModeService(LoadoutStore store, Loadouts loadouts, Messages messages, ActionBars actionBars,
                             Vanish vanish, de.raindancer.core.moderation.players.PlayerPowers powers,
                             BiConsumer<Player, Loadout.Place> moveTo, EssentialsSettings settings, LandBypass land) {
+        this(store, loadouts, messages, actionBars, vanish, powers, moveTo, settings, land, null);
+    }
+
+    /** With {@code flight}, admin flight is a lease: coming out never ends a claim's or {@code /fly}'s. */
+    public AdminModeService(LoadoutStore store, Loadouts loadouts, Messages messages, ActionBars actionBars,
+                            Vanish vanish, de.raindancer.core.moderation.players.PlayerPowers powers,
+                            BiConsumer<Player, Loadout.Place> moveTo, EssentialsSettings settings, LandBypass land,
+                            de.raindancer.core.world.movement.Flight flight) {
+        this.flight = flight;
         this.land = land == null ? LandBypass.NONE : land;
         this.store = store;
         this.loadouts = loadouts;
@@ -229,6 +241,11 @@ public final class AdminModeService implements IEssentialsService {
             messages.send(player, "essentials.admin.could-not-save");
             return false;
         }
+        if (flight != null) {
+            // Before the survival side is put on: flight that side had of its own stays, which a revoke after it
+            // would take as the lease's to end.
+            flight.revoke(player, FLIGHT_SOURCE);
+        }
         loadouts.apply(player, survival);
         store.delete(id, SURVIVAL);
         inAdminMode.remove(id);
@@ -291,7 +308,11 @@ public final class AdminModeService implements IEssentialsService {
         UUID id = player.getUniqueId();
         player.setGameMode(settings.adminStartingGameMode());
         if (settings.adminFly()) {
-            player.setAllowFlight(true);
+            if (flight != null) {
+                flight.grant(player, FLIGHT_SOURCE);
+            } else {
+                player.setAllowFlight(true);
+            }
         }
         if (settings.adminGod() && !powers.isInvulnerable(id) && powers.god(id, true)) {
             godByUs.add(id);

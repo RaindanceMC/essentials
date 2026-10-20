@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.30.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.30.1")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -190,7 +190,8 @@ public final class EssentialsModule implements FlexModule {
         de.raindancer.modules.essentials.service.AdminModeService adminMode =
                 new de.raindancer.modules.essentials.service.AdminModeService(
                         new de.raindancer.core.data.loadout.LoadoutStore(context.dataFolder().resolve("admin-mode")),
-                        de.raindancer.core.data.loadout.Loadouts.ofTheServer(), context.core().messages(),
+                        de.raindancer.core.data.loadout.Loadouts.ofTheServer(context.core().flight()),
+                        context.core().messages(),
                         context.core().actionBars(), context.core().vanish(), context.core().powers(),
                         (who, place) -> {
                             org.bukkit.World world = server.getWorld(place.world());
@@ -208,7 +209,7 @@ public final class EssentialsModule implements FlexModule {
                             public boolean toggle(org.bukkit.entity.Player player) {
                                 return context.core().land().toggleBypass(player);
                             }
-                        });
+                        }, context.core().flight());
         de.raindancer.core.moderation.players.AdminModes.Source inAdminMode = adminMode::isInAdminMode;
         de.raindancer.core.moderation.players.AdminModes.provide(inAdminMode);
         context.closeWith(() -> de.raindancer.core.moderation.players.AdminModes.withdraw(inAdminMode));

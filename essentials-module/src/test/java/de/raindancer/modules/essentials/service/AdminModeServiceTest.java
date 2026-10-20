@@ -394,4 +394,69 @@ class AdminModeServiceTest {
         assertThat(service.toggleBypass(player)).isFalse();
         assertThat(service.keepsItemsApart(id)).isTrue();
     }
+
+    @org.junit.jupiter.api.Nested
+    @DisplayName("admin flight beside a claim's or /fly's")
+    class LeasedFlight {
+
+        private final de.raindancer.core.world.movement.Flight flight =
+                new de.raindancer.core.world.movement.Flight(mock(org.bukkit.plugin.Plugin.class), () -> 1_000L);
+        private boolean allowFlight;
+        private AdminModeService leased;
+
+        @BeforeEach
+        void flier() {
+            when(player.getGameMode()).thenReturn(GameMode.SURVIVAL);
+            when(player.getAllowFlight()).thenAnswer(call -> allowFlight);
+            org.mockito.Mockito.doAnswer(call -> allowFlight = call.getArgument(0))
+                    .when(player).setAllowFlight(org.mockito.ArgumentMatchers.anyBoolean());
+            org.bukkit.World world = mock(org.bukkit.World.class);
+            when(world.hasCollisionsIn(any())).thenReturn(true);
+            when(player.getWorld()).thenReturn(world);
+            when(player.getBoundingBox()).thenReturn(new org.bukkit.util.BoundingBox(0, 64, 0, 0.6, 65.8, 0.6));
+            when(player.getPersistentDataContainer())
+                    .thenReturn(mock(org.bukkit.persistence.PersistentDataContainer.class));
+            when(loadouts.capture(player)).thenReturn(SURVIVAL, ADMIN_NOW);
+            leased = new AdminModeService(store, loadouts, messages, actionBars, vanish, powers,
+                    (who, place) -> movedTo.add(place), EssentialsSettings.DEFAULTS, land, flight);
+        }
+
+        @Test
+        @DisplayName("coming out inside a flying claim leaves the claim's flight on")
+        void claimFlightOutlivesAdminMode() {
+            flight.grant(player, "claims");
+            leased.toggle(player);
+            assertThat(flight.holds(id, AdminModeService.FLIGHT_SOURCE)).isTrue();
+
+            leased.toggle(player);
+
+            assertThat(allowFlight).isTrue();
+            assertThat(flight.holds(id, "claims")).isTrue();
+            assertThat(flight.holds(id, AdminModeService.FLIGHT_SOURCE)).isFalse();
+        }
+
+        @Test
+        @DisplayName("nor does it end /fly")
+        void flyOutlivesAdminMode() {
+            flight.grant(player, de.raindancer.core.world.movement.Flight.FLY);
+            leased.toggle(player);
+
+            leased.toggle(player);
+
+            assertThat(allowFlight).isTrue();
+            assertThat(flight.hasOwnFlight(player)).isTrue();
+        }
+
+        @Test
+        @DisplayName("flight only admin mode lent goes when they come out")
+        void ownFlightEndsWithAdminMode() {
+            leased.toggle(player);
+            assertThat(allowFlight).isTrue();
+
+            leased.toggle(player);
+
+            assertThat(allowFlight).isFalse();
+            assertThat(flight.isGranted(id)).isFalse();
+        }
+    }
 }
