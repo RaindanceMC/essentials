@@ -33,6 +33,8 @@ essentials:
     no-such: "<red>There is no rule <white><number></white>."
     blank: "<red>That is empty."
     too-long: "<red>Too long — <white><limit></white> characters at most."
+  gamemode:
+    not-this-one: "<red>You may not switch to <white><mode></white>."
   admin:
     entered: "<green>Admin mode on. <gray>Your own inventory is stored; <white>/admin</white> brings it back. <dark_gray>Bypass and claim bypass are on."
     left: "<green>Admin mode off. <gray>Your own inventory is back."

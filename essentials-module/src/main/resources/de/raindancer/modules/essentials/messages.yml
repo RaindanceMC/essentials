@@ -216,6 +216,10 @@ essentials:
       took: "<green>Added <white><title></white> as rule <white><number></white>."
       already-have: "<gray>You already have <white><title></white>. Once is enough, even for good advice."
 
+  # ── /gamemode ─────────────────────────────────────────────────────────────
+  gamemode:
+    not-this-one: "<red>Not <white><mode></white> for you. <gray>Your rank allows other game modes, just not this one."
+
   # ── /admin ────────────────────────────────────────────────────────────────
   admin:
     entered: "<green>Admin mode on. <gray>Your own things are packed away safely; <white>/admin</white> brings them back. <dark_gray>Bypass and claim bypass are on."

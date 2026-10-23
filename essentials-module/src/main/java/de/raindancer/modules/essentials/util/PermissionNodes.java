@@ -122,7 +122,16 @@ public final class PermissionNodes {
                 new Permission(ADMIN_OTHERS, "Switch somebody else's admin mode with /admin <player>",
                         PermissionDefault.OP),
                 new Permission(ADMIN_BYPASS, "In admin mode, lift keeping admin items apart with /admin bypass",
-                        PermissionDefault.OP));
+                        PermissionDefault.OP),
+                gameMode(org.bukkit.GameMode.SURVIVAL), gameMode(org.bukkit.GameMode.CREATIVE),
+                gameMode(org.bukkit.GameMode.ADVENTURE), gameMode(org.bukkit.GameMode.SPECTATOR));
+    }
+
+    /** Operators hold all four, so for them, and for anybody holding none, /gamemode stays as it was. */
+    private static Permission gameMode(org.bukkit.GameMode mode) {
+        return new Permission(de.raindancer.modules.essentials.rules.GameModeRule.node(mode),
+                "Switch to " + mode.name().toLowerCase(java.util.Locale.ROOT) + " with /gamemode or F3+F4; "
+                        + "holding any of these limits somebody to the modes they hold", PermissionDefault.OP);
     }
 
     /** @return how many were added, for the line in the log */

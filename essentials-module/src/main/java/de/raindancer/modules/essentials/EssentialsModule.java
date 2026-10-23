@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.30.1")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.31.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -255,6 +255,7 @@ public final class EssentialsModule implements FlexModule {
         context.closeWith(() -> de.raindancer.core.social.presence.PresenceLines.silence(voice));
         context.listener(new de.raindancer.modules.essentials.listener.AdvancementListener(services));
         context.listener(new de.raindancer.modules.essentials.listener.AdminModeListener(services));
+        context.listener(new de.raindancer.modules.essentials.listener.GameModeListener(services));
         // A reload while somebody is in admin mode: they are still in it.
         for (org.bukkit.entity.Player online : server.getOnlinePlayers()) {
             Scheduling.entity(context.plugin(), online, () -> adminMode.joined(online));
