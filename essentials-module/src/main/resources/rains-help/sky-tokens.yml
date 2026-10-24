@@ -1,0 +1,33 @@
+id: sky-tokens
+title: Clear Sky and Dawn tokens
+summary: Right-click an item to chase the rain away or skip the night — for everyone in your world.
+intro: |
+  Weather and night are annoying. Now they are also optional, provided somebody gave you a token.
+icon: SUNFLOWER
+category: Items & enchantments
+order: 40
+module: essentials
+aliases: [token, tokens, weather, night, dawn, clearsky, rain]
+keywords: [sun, storm, thunder, sleep, time]
+commands: [token]
+related: [item-tools]
+sections:
+  - question: What do the tokens do?
+    title: The two tokens
+    text: |
+      <b>Clear Sky Token</b> (a glowing sunflower) chases rain and thunder out of the sky for a full Minecraft day. <b>Dawn Token</b> (a glowing clock) skips straight to the next sunrise.
+      Both affect the whole world you stand in, and everybody there is told who did it.
+  - question: How do I use one?
+    title: Using a token
+    text: |
+      Hold it and right-click. It is used up only if it actually did something: if the sky is already clear, or it is already day, I tell you and the token stays yours.
+      They do nothing in the Nether or the End, which have no sky. And they cannot be put in a crafting grid.
+  - question: How do I get one?
+    title: Getting one
+    text: |
+      Staff hand them out, usually as a prize. You cannot craft them.
+  - question: How do I hand them out?
+    title: Giving tokens
+    permission: essentials.tokens.give
+    text: |
+      {cmd:/token sky [player] [amount]} or {cmd:/token dawn [player] [amount]}. Amount is 1 to 64, default 1; what does not fit in the inventory drops at their feet. The player may be on another server of the network. Without a name the token is for you. Every use is audited.

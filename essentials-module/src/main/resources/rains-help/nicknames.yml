@@ -1,0 +1,53 @@
+id: nicknames
+title: Nicknames
+summary: Being called something else — the rules for a good name, colours, and what staff can do.
+intro: |
+  Tired of your own name? Pick another. Within reason. I have heard what people try.
+icon: NAME_TAG
+category: Looks & cosmetics
+order: 10
+module: essentials
+aliases: [nick, name, rename, nickname]
+keywords: [colour, color, display name, blocklist, tablist]
+commands: [nick]
+related: [players, messaging]
+when: essentials:nicknames-enabled
+sections:
+  - question: How do I set a nickname?
+    title: Setting one
+    text: |
+      Type {run:/nick} for a menu, or go straight: {cmd:/nick [name]} (or {cmd:/nick set [name]}). Spaces are allowed, and so is colour.
+      Your nickname can be up to {setting:essentials:nickname-max-length|count} characters — counted after colour and formatting are stripped, so only what is actually visible counts.
+  - question: How do I get my own name back?
+    title: Removing it
+    text: |
+      {cmd:/nick clear} or {cmd:/nick off}, or the red button in the menu. Back to being plain you.
+  - question: Where does it show up?
+    title: Where it is shown
+    text: |
+      In chat, in private messages, in {cmd:/msg} lists — and every command on the server understands it, so friends can still type your nickname to reach you.
+      {if:essentials:nickname-shown-everywhere}It is also on your nametag and in the player list.{else}The player list and the nametag keep your real name; only chat shows the nickname.{/if}
+      It is remembered across visits, and on a network it is the same on every server.
+  - question: Which names are refused?
+    title: Refused names
+    text: |
+      <b>Blank</b> names, names over the limit, and anything starting with <b>@</b> (every command would think you meant "everybody") or <b>/</b> (the server would read it as a command).
+      <b>A real player's name</b> — impersonation is not a hobby here, even with spaces or underscores swapped.
+      <b>A name somebody else already wears</b> — two of them would make every private message ambiguous.
+      <b>Blocklisted names</b> — I will not say which.
+  - question: What happens if I try a blocked name?
+    title: The blocklist
+    text: |
+      You are simply told the name is not allowed. Staff are told straight away who tried what — and for the most serious names (extremist figures and such) the attempt also costs a one-day ban, automatically. Colour tricks do not hide a name from it.
+  - question: Can staff change somebody's nickname?
+    title: Staff powers
+    permission: essentials.nick.others
+    text: |
+      You can. {cmd:/nick [player] [name]} sets theirs, {cmd:/nick [player] clear} takes it off — online or not, and they are told it was you. If the first word could also be a nickname, add <b>set</b> or <b>clear</b> so you do not rename the wrong person.
+      {if:@perm:essentials.nick.bypass-blocklist}You may skip the blocklist; a name chosen on purpose is never reported or punished.{/if}
+  - question: How do I edit the blocklist?
+    title: Blocklist editor
+    permission: essentials.blocklist.manage
+    text: |
+      {run:/nick blocklist} opens the in-game editor: names sit in sections, each with its own on/off switch and an action — <b>report</b> tells staff, <b>ban</b> reports and bans for a day. Every opening is logged.
+      Staff with <b>essentials.staff.notify</b> see the live reports in chat.

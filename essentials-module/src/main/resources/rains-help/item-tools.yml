@@ -1,0 +1,53 @@
+id: item-tools
+title: Enchanting and repairing
+summary: "Taking enchantments off — and, for staff, enchanting past vanilla limits and repairing on command."
+intro: |
+  Everyone may undo an enchantment. Adding them, and mending things by decree, is for the people with the right badge.
+icon: ENCHANTED_BOOK
+category: Items & enchantments
+order: 5
+module: essentials
+aliases: [enchant, disenchant, repair, repairall, fix, unenchant]
+keywords: [enchantment, durability, level, curse, mending, remove]
+commands: [enchant, disenchant, repair, repairall]
+related: [sky-tokens]
+sections:
+  - question: How do I take an enchantment off?
+    title: /disenchant
+    permission: essentials.disenchant
+    text: |
+      Hold the item and type {cmd:/disenchant [enchantment]} — tab-completion shows exactly what is on it. {cmd:/disenchant all} removes everything at once.
+      <b>Curses stay.</b> Binding and Vanishing do not come off by command, or a cursed helmet would be one line away from gone.{if:@perm:essentials.disenchant.curses} You may remove curses too.{/if}
+      An item without that enchantment is left as it is.
+  - question: How do I enchant my item?
+    title: /enchant
+    permission: essentials.enchant
+    text: |
+      Hold it and type {cmd:/enchant [enchantment] [level]}. {run:/enchant} alone opens a picker. Level 0 — or the word <b>remove</b> — takes it off, and {cmd:/enchant clear} strips everything.
+      Without extra permission, the enchantment must fit the item and its level may not go past what vanilla allows. On a book it is stored the way an anvil expects.
+  - question: What may I do beyond vanilla?
+    title: Beyond the limits
+    permission: essentials.enchant
+    text: |
+      {if:@perm:essentials.enchant.beyond-max}You may push levels up to 255, the highest the game can store.{else}You are held to vanilla's maximum level.{/if}
+      {if:@perm:essentials.enchant.any-item}You may put an enchantment on items it normally does not fit.{else}Enchantments must fit the item.{/if}
+  - question: Can I enchant somebody else's item?
+    title: Other players
+    permission: essentials.enchant.others
+    text: |
+      Add their name at the end: {cmd:/enchant [enchantment] [level] [player]}, {cmd:/enchant clear [player]} or {cmd:/disenchant [enchantment|all] [player]}. They get a note that staff changed their item.
+  - question: How do I repair my item?
+    title: /repair
+    permission: essentials.repair
+    text: |
+      Hold the damaged item and type {cmd:/repair}. It is mended to full durability for free. Things that cannot wear out, and items already perfect, are refused.
+  - question: How do I repair everything?
+    title: /repairall
+    permission: essentials.repair.all
+    text: |
+      {run:/repairall} mends everything you carry: inventory, armour and off hand. You are told how many things were fixed.
+  - question: Can I repair for somebody else?
+    title: Repairing others
+    permission: essentials.repair.others
+    text: |
+      {cmd:/repair [player]} and {cmd:/repairall [player]}. They are told what you fixed. Everything staff do with items is written to the audit log.

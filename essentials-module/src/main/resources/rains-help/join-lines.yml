@@ -1,0 +1,34 @@
+id: join-lines
+title: Joining, leaving, greetings
+summary: The lines in chat when people arrive or leave, and the little buttons that say hi or congratulate.
+intro: |
+  Everyone likes being noticed. Mostly. Here is what the server says about arrivals and achievements.
+icon: OAK_DOOR
+category: Chat & community
+order: 40
+module: essentials
+aliases: [welcome, join, quit, leave, congrats, hi, advancements]
+keywords: [greeting, button, first join, new player]
+related: [rules, afk]
+sections:
+  - question: What do the join and quit lines say?
+    title: Join and quit
+    text: |
+      {if:essentials:join-quit-enabled}When somebody arrives, chat says so, and the same when they leave. If staff vanish and come back, it reads as a normal quit and join too.{else}This server leaves the join and quit lines exactly as vanilla Minecraft writes them.{/if}
+  - question: What happens on a first visit?
+    title: First join
+    when: essentials:welcome-first-join
+    text: |
+      A player joining for the very first time gets a welcome broadcast of their own, on top of the ordinary join line.{if:essentials:rules-on-first-join} They are also shown the {topic:rules} right after.{/if}
+  - question: What is the Say Hi! button?
+    title: Say Hi!
+    when: essentials:welcome-say-hi
+    text: |
+      Under somebody's join line everyone else gets a green <green>[Say Hi!]</green> button. One click puts a friendly greeting plus their name in chat, in your voice. Once per player per join; you cannot greet yourself.
+      The greeting is picked from {setting:essentials:welcome-greetings|count} possible lines.
+  - question: What is the Congrats! button?
+    title: Congrats!
+    when: essentials:advancement-congrats
+    text: |
+      When somebody earns an advancement, a gold <gold>[Congrats!]</gold> button appears under the line. Click it and a cheer plus their name goes to chat — once per advancement, never for your own.
+      It picks from {setting:essentials:advancement-congrats-phrases|count} phrases.

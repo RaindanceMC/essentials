@@ -1,0 +1,41 @@
+id: rules
+title: The rules
+summary: What you may and may not do here, what breaking each rule costs — and how staff edit them.
+intro: |
+  I did not write them, but I do enforce reading. Everyone starts here.
+icon: BOOK
+category: Getting started
+order: 5
+module: essentials
+aliases: [rule, laws, punishment, preset]
+keywords: [ban, mute, warn, penalty, guidelines]
+commands: [rules]
+related: [basics]
+sections:
+  - question: Where are the rules?
+    title: Reading them
+    text: |
+      {run:/rules} lists them all, numbered. {cmd:/rules [number]} shows a single one. Rules that staff have switched off are not shown to you.
+      {if:essentials:rules-on-first-join}New players are shown them automatically on their first join.{/if}
+  - question: What happens if I break one?
+    title: Punishments
+    text: |
+      Under a rule you may see a line "breaking it" — the ladder of consequences, first offence first, for example a warning, then a short mute, then a ban. After the last step it stays on the last one.
+      Rules without a ladder are left to the moderator's judgement, case by case.
+  - question: How do staff edit the rules?
+    title: Rule editor
+    permission: essentials.rules.manage
+    text: |
+      {run:/rules edit} opens the editor: click a rule to change its <b>title</b> (40 characters), <b>text</b> (256 characters), icon, punishment ladder or visibility, move it up and down, or remove it.
+      By command: {cmd:/rules add [title] | [text]} adds one at the end, {cmd:/rules remove [number]} removes one, and {cmd:/rules punishment [number] warn, mute 1h, ban 3d, ban} sets the ladder (nothing after the number clears it). Kinds: warn, kick, mute, freeze, ban — a ban without a length is for good.
+  - question: What are rule presets?
+    title: Presets
+    permission: essentials.rules.manage
+    text: |
+      Ready-made rule sets such as a friendly SMP or PvP. {run:/rules preset list} shows them, {cmd:/rules preset show [name]} lists a preset's rules, and {cmd:/rules preset take [name] [number]} copies a single rule into yours.
+      {cmd:/rules preset apply [name]} <b>replaces every rule</b> with the preset's, {cmd:/rules preset save [name] [description]} keeps your current set as a preset (names: letters, digits, dashes; 32 characters), and {cmd:/rules preset delete [name]} removes one. Apply and delete ask you to confirm first — click the red button or add <b>confirm</b>.
+  - question: Is this tied to moderation?
+    title: Moderation link
+    permission: essentials.rules.manage
+    text: |
+      Yes. Moderators pick a rule when punishing, and the server proposes the step from its ladder. So the ladders you set here are exactly what is applied.

@@ -88,7 +88,8 @@
         <!-- 1.30.0: /admin <player> switches somebody else's admin mode (essentials.admin.others). -->
         <!-- 1.31.0: per-mode game mode nodes essentials.gamemode.<mode> — holding any limits /gamemode and F3+F4 to the modes held. -->
         <!-- 1.30.1: admin mode's flight is a lease on Core's flight — coming out inside a flying claim or under /fly leaves that flight on, and a claim's flight is not saved with the survival side. -->
-        <plugin.version>1.31.0</plugin.version>
+        <!-- 1.32.0: /help guide — spawn, afk, messaging, players, nicknames, join-lines, rules, fun, item-tools, sky-tokens, admin-mode (RainsCore 2.4). -->
+        <plugin.version>1.32.0</plugin.version>
     </properties>
 
     <dependencies>

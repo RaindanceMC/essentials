@@ -1,0 +1,35 @@
+id: afk
+title: Away from keyboard
+summary: How the server notices you stepped away, what everybody sees, and how to come back.
+intro: |
+  Went to make tea? Fine. Just let me, and everyone else, know — or let me notice by myself.
+icon: CLOCK
+category: Chat & community
+order: 30
+module: essentials
+aliases: [away, idle]
+keywords: [afk, tablist, nametag, inactive]
+commands: [afk]
+related: [messaging]
+sections:
+  - question: How do I mark myself AFK?
+    title: Going AFK
+    text: |
+      Type {run:/afk}. You are marked away at once; type it again, or simply move, talk or run a command, and you are back.
+  - question: Does the server notice by itself?
+    title: Automatic AFK
+    when: essentials:afk-enabled
+    text: |
+      Yes. After {setting:essentials:afk-timeout-seconds|seconds} without moving, chatting or typing a command you are marked AFK automatically.
+      Coming back is just as automatic: the moment you do anything, you are present again. Yes, even if a mob pushed you — I prefer being wrong in your favour.
+  - question: What do others see?
+    title: What is shown
+    text: |
+      A grey <gray>[AFK]</gray> sits in front of your name on the nametag and in the player list.
+      {if:essentials:afk-broadcast}Going away and coming back are also announced in chat.{else}It is kept quiet: nothing is announced in chat, only you get a short note.{/if}
+      Other features can ask whether you are away — for example an economy that pays passive income only to people who are actually there.
+  - question: Is AFK switched off here?
+    title: If it is off
+    when: "!essentials:afk-enabled"
+    text: |
+      Automatic AFK detection is switched off on this server. {cmd:/afk} still works if you want to flag yourself manually.

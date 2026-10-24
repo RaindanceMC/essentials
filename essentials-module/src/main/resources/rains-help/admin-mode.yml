@@ -1,0 +1,48 @@
+id: admin-mode
+title: Admin mode
+summary: "Staff only: a second inventory, game mode and ender chest, swapped in and out with one command."
+intro: |
+  Moderating with a pocket full of diamonds is awkward. This keeps your two lives apart.
+icon: COMMAND_BLOCK
+category: Staff
+order: 10
+module: essentials
+permission: essentials.admin
+aliases: [admin, adminmode, staffmode]
+keywords: [staff, inventory, creative, vanish, bypass, god]
+commands: [admin]
+when: essentials:admin-mode-enabled
+related: [staff-tools]
+sections:
+  - question: What is admin mode?
+    title: The idea
+    text: |
+      A separate set of everything — inventory, ender chest, experience, health, effects and game mode. Your survival side is packed away safely and comes back exactly as it was. Type {run:/admin} to go in, again to come out. {cmd:/admin on}, {cmd:/admin off} and {cmd:/admin status} do what they say.
+      {cmd:/adminmode} and {cmd:/staffmode} are the same command.
+  - question: What happens when I go in?
+    title: On entering
+    text: |
+      You get the game mode <b>{setting:essentials:admin-game-mode|lower}</b>.{if:essentials:admin-vanish} You are vanished — unless you already were; coming out shows you again only if you were not.{/if}{if:essentials:admin-fly} You can fly.{/if}{if:essentials:admin-god} Nothing can hurt you.{/if}
+      Land bypass is switched on too, so protections do not block your work.{if:essentials:admin-return-to-place} Coming out puts you back where you went in, so flying somewhere as admin is not a free trip for your survival side.{/if}
+      A red ADMIN MODE bar reminds you where you are.
+  - question: What can I not do in it?
+    title: Items stay apart
+    when: essentials:admin-keep-items-apart
+    text: |
+      Admin items must never reach the survival side, so you cannot drop, pick up, store in chests, trade or put items in frames, pots or shelves.{if:essentials:admin-containers} You can still use chests, barrels, shulker boxes, furnaces, hoppers, frames, armour stands and shelves, and every item that goes in or out is written to the audit log. Trading with villagers stays closed.{else} Containers can be looked into but not used.{/if}
+      Dying in admin mode drops nothing and costs no experience, and no advancements are earned.
+  - question: Can I lift that restriction?
+    title: Bypass
+    permission: essentials.admin.bypass
+    text: |
+      Inside admin mode {cmd:/admin bypass} lifts it and logs it; type it again to restore the separation.
+  - question: What if I log out or restart?
+    title: Leaving the game
+    text: |
+      You stay in admin mode and pick up right where you were. Your survival side is always on disk first, so a crash never duplicates or loses it. If your file cannot be read, you stay in admin mode until somebody fixes it, rather than losing anything.
+      If you lose the permission while in it, you are put back into your own inventory.
+  - question: Can I switch somebody else?
+    title: Other players
+    permission: essentials.admin.others
+    text: |
+      {cmd:/admin [player]} toggles the admin mode of an online player, and they are told why. It is audited.

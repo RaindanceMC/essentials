@@ -1,0 +1,39 @@
+id: messaging
+title: Private messages
+summary: Whispering to one player, answering quickly, and shutting somebody out.
+intro: |
+  Some things are not for the whole chat. Whisper them.
+icon: WRITABLE_BOOK
+category: Chat & community
+order: 20
+module: essentials
+aliases: [msg, tell, whisper, m, r, reply, dm, pm, ignore, unignore, block, mute]
+keywords: [private, message, ignore, answer, chat]
+commands: [msg, r, ignore, unignore]
+related: [players, nicknames]
+sections:
+  - question: How do I message somebody?
+    title: Sending
+    text: |
+      {cmd:/msg [player] [message]} — also {cmd:/m}, {cmd:/tell} and {cmd:/whisper}. You see <gray>[me → them]</gray>, they see <gray>[you → me]</gray>. Names tab-complete, and a nickname works too.
+      On a network the person is found on whichever server they are on and the message follows them there.
+      You cannot message yourself. I tried it once, it was awkward.
+  - question: How do I answer quickly?
+    title: Replying
+    text: |
+      {cmd:/r [message]} (or {cmd:/reply}) answers whoever messaged you last — or whom you messaged last.
+      I only remember that for the current visit: after a restart, or when you move to another server, nobody is left to reply to until the next message.
+  - question: When does a message not arrive?
+    title: Undeliverable
+    text: |
+      Whoever you write to is shown as "offline" when they really are, when they are <b>vanished</b>, or when <b>they ignore you</b>. You are always told the same plain thing, so nobody learns more than they should.
+  - question: How do I ignore somebody?
+    title: Ignoring
+    text: |
+      {cmd:/ignore [player]} blocks their private messages to you — typing it again lifts the block. {cmd:/unignore [player]} lifts it directly, and {run:/ignore list} shows who you have blocked.
+      The list is yours alone, it is remembered between visits, and the other person is not told.
+      It only covers private messages, not public chat.
+  - question: Can I click a name to write to them?
+    title: Message button
+    text: |
+      Yes. Click a player's name in chat, open their profile, and use <b>Message</b>. {run:/players} lists everybody to pick from.

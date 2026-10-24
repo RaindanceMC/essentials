@@ -1,0 +1,37 @@
+id: spawn
+title: Spawn
+summary: The one place everybody can always get back to, and how long you stand still before it takes you.
+intro: |
+  Lost, lonely or merely out of ideas? Every server has a spawn point, and I will happily point you at it.
+icon: RED_BED
+category: Getting around
+order: 10
+module: essentials
+aliases: [setspawn, lobby, start]
+keywords: [teleport, warmup, home, hub, stuck]
+commands: [spawn, setspawn]
+related: [basics]
+sections:
+  - question: How do I get to spawn?
+    title: Going to spawn
+    text: |
+      Type {run:/spawn}. You are sent to the server's spawn point from wherever you stand — as long as one has been set, and the world it lives in is loaded. If either is missing, I say so and nothing happens to you.
+  - question: Why do I have to wait first?
+    title: The warm-up
+    text: |
+      {if:essentials:spawn-warmup-seconds > 0}After {cmd:/spawn} you stand still for {setting:essentials:spawn-warmup-seconds|seconds}, and I count it down for you. It is not a free way out of a fight.
+      <b>Move</b> or <b>get hurt</b> during the countdown and the trip is cancelled — type the command again when things are calmer.{else}On this server {cmd:/spawn} takes you there at once, no waiting.{/if}
+      You cannot start a second trip while one is under way.
+  - question: What can go wrong?
+    title: When it refuses
+    text: |
+      <b>No spawn point yet</b> — nobody has set one.
+      <b>The spawn world is not loaded</b> — try again in a moment.
+      <b>Nowhere safe near spawn</b> — the spot is blocked, so you stay where you are, unharmed.
+      <b>Something stopped the teleport</b> — you stay put; just retry.
+      In every case you lose nothing.
+  - question: How is the spawn point set?
+    title: Setting it
+    permission: essentials.setspawn
+    text: |
+      Stand where you want everyone to arrive and type {cmd:/setspawn}. It replaces the old spawn point — there is only ever one — and the change is written to the audit log with your name on it.

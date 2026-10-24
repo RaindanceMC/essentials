@@ -1,0 +1,38 @@
+id: players
+title: Finding players
+summary: Who is online, where somebody is, when they were last here, and everybody the server has ever met.
+intro: |
+  Looking for somebody? I know everybody who ever walked in, including the ones who left in a huff.
+icon: PLAYER_HEAD
+category: Chat & community
+order: 10
+module: essentials
+aliases: [seen, list, online, where, player, players, who, find]
+keywords: [lastseen, playtime, profile, offline, network, servers]
+commands: [seen, list, where, players, player]
+related: [messaging, nicknames]
+sections:
+  - question: Who is online?
+    title: The online list
+    text: |
+      {run:/list} (or {cmd:/online}) shows everybody online. On a network it lists every server of the network, with your own marked as "this server". Vanished staff only appear for those who may see them.
+  - question: When was somebody last here?
+    title: /seen
+    text: |
+      {cmd:/seen [player]} tells you if they are online right now, or how long ago they were last seen, plus how long they have played in total. If they are on another server of the network, you are told which one.
+      Type {run:/seen} alone to get a list to pick from. Somebody who is vanished reads as offline to everybody who may not see them.
+  - question: Where is somebody?
+    title: /where
+    text: |
+      {cmd:/where [player]} says whether they are on this server or on another one of the network.
+      <b>Staff</b> with the extra permission also see the world and the coordinates; everybody else gets the server only.
+  - question: How do I browse every player?
+    title: /players
+    text: |
+      {run:/players} opens a list of every player this server has ever seen — online ones first, offline ones included. Pick one and their profile opens: message them, teleport requests and whatever else is installed, one click away.
+      {cmd:/player [name]} jumps straight to a profile by name.
+  - question: Who may see the exact coordinates?
+    title: Coordinates
+    permission: essentials.where.location
+    text: |
+      You may. {cmd:/where [player]} shows you the world and block coordinates as well as the server. Treat it with the respect it deserves.
