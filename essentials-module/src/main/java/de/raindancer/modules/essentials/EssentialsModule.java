@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.32.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.33.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -213,6 +213,19 @@ public final class EssentialsModule implements FlexModule {
         de.raindancer.core.moderation.players.AdminModes.Source inAdminMode = adminMode::isInAdminMode;
         de.raindancer.core.moderation.players.AdminModes.provide(inAdminMode);
         context.closeWith(() -> de.raindancer.core.moderation.players.AdminModes.withdraw(inAdminMode));
+
+        // Screens for /screen — Core 2.10.0; on an older Core there are simply none.
+        try {
+            var screens = context.core().screens();
+            if (screens != null) {
+                new de.raindancer.modules.essentials.service.EssentialsScreens(server, context.core().vanish(),
+                        afk, ruleBook, store).register(screens, context.plugin());
+                context.closeWith(() -> de.raindancer.modules.essentials.service.EssentialsScreens.KINDS
+                        .forEach(screens::unregister));
+            }
+        } catch (LinkageError olderCore) {
+            context.log().info("RainsCore is older than 2.10.0: no Essentials screens until it is updated.");
+        }
 
         services = new EssentialsServices(context.plugin(), server, context.core(), log,
                 context.core().messages(), context.chat(), context.chat().brand(),
