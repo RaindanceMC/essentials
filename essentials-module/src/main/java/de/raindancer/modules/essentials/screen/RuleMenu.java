@@ -2,6 +2,7 @@ package de.raindancer.modules.essentials.screen;
 
 import de.raindancer.core.ui.choose.ItemChooser;
 import de.raindancer.core.ui.menu.ConfirmMenu;
+import de.raindancer.core.ui.menu.Arrow;
 import de.raindancer.core.ui.menu.Icons;
 import de.raindancer.core.ui.menu.Menu;
 import de.raindancer.core.ui.menu.MenuLayout;
@@ -104,13 +105,13 @@ public final class RuleMenu extends Menu {
                     services.rules().book().update(ruleId, current -> current.withEnabled(!current.enabled()));
                     refresh();
                 });
-        band(MenuLayout.RULES, 4, number > 1, Icons.of(Material.ARROW, "<white>Move up",
+        band(MenuLayout.RULES, 4, number > 1, Icons.arrow(Arrow.UP, "<white>Move up",
                         "<gray>Now number " + number + " of " + total + "."),
                 "Already first", click -> {
                     services.rules().book().move(ruleId, -1);
                     refresh();
                 });
-        band(MenuLayout.RULES, 6, number < total, Icons.of(Material.ARROW, "<white>Move down",
+        band(MenuLayout.RULES, 6, number < total, Icons.arrow(Arrow.DOWN, "<white>Move down",
                         "<gray>Now number " + number + " of " + total + "."),
                 "Already last", click -> {
                     services.rules().book().move(ruleId, 1);
