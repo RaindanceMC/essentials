@@ -24,8 +24,16 @@ public final class PlayerCommand implements IEssentialsCommand {
 
     private final Supplier<EssentialsServices> services;
 
+    /** Bare {@code /profile} is your own profile; bare {@code /player} the list to pick from. */
+    private final boolean bareIsOwn;
+
     public PlayerCommand(Supplier<EssentialsServices> services) {
+        this(services, false);
+    }
+
+    public PlayerCommand(Supplier<EssentialsServices> services, boolean bareIsOwn) {
         this.services = services;
+        this.bareIsOwn = bareIsOwn;
     }
 
     @Override
@@ -39,7 +47,11 @@ public final class PlayerCommand implements IEssentialsCommand {
         CommandSender sender = source.getSender();
         if (args.length == 0) {
             if (!(sender instanceof Player viewer)) {
-                live.messages().send(sender, "essentials.usage", "usage", "/player <name>");
+                live.messages().send(sender, "essentials.usage", "usage", bareIsOwn ? "/profile <name>" : "/player <name>");
+                return;
+            }
+            if (bareIsOwn) {
+                new ProfileMenu(viewer, live.brand(), null, viewer.getUniqueId(), viewer.getName()).open();
                 return;
             }
             SeenCommand.openChooser(live, viewer, "Players");

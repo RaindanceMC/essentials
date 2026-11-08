@@ -73,6 +73,9 @@ public final class EssentialsCommands {
                 ModuleCommand.of("player", "Opens one player's profile directly, by name",
                                 new PlayerCommand(EssentialsCommands::require))
                         .taking("(nothing) — opens a list to pick from", "<name> — straight to theirs"),
+                ModuleCommand.of("profile", "Your profile, or anybody's by name",
+                                new PlayerCommand(EssentialsCommands::require, true))
+                        .taking("(nothing) — your own", "<name> — theirs"),
 
                 ModuleCommand.of("nick", "Sets, or removes, what you are called instead of your own name",
                                 new NickCommand(EssentialsCommands::require))

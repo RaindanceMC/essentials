@@ -7,9 +7,9 @@ icon: PLAYER_HEAD
 category: Chat & community
 order: 10
 module: essentials
-aliases: [seen, list, online, where, player, players, who, find]
+aliases: [seen, list, online, where, player, players, profile, who, find]
 keywords: [lastseen, playtime, profile, offline, network, servers]
-commands: [seen, list, where, players, player]
+commands: [seen, list, where, players, player, profile]
 related: [messaging, nicknames]
 sections:
   - question: Who is online?
@@ -30,7 +30,7 @@ sections:
     title: /players
     text: |
       {run:/players} opens a list of every player this server has ever seen — online ones first, offline ones included. Pick one and their profile opens: message them, teleport requests and whatever else is installed, one click away.
-      {cmd:/player [name]} jumps straight to a profile by name.
+      {cmd:/player [name]} jumps straight to a profile by name, and so does {cmd:/profile [name]} — {run:/profile} alone is your own. Anybody may look at anybody's: their face, when they were last here, how long they played, and the buttons for them.
   - question: Who may see the exact coordinates?
     title: Coordinates
     permission: essentials.where.location
