@@ -23,8 +23,10 @@ import java.util.function.Function;
  * A line about somebody, with a button for everybody else that makes them say something nice — Say Hi!
  * under a join, Congrats! under an advancement.
  *
- * <p>Rendered per recipient and bound to them, so one click does not spend everybody's button; and
- * repeatable, so a second click reaches {@link ReactionRule}, whose answer is better than the button's
+ * <p>One shared token per line, not one per recipient: a join with 100 players online would otherwise put
+ * 99 entries into Core's capped click table and push other plugins' buttons (TPA, confirms) out. It is
+ * repeatable, so nobody's click spends it for the others; the per-clicker rule (once each, never for
+ * yourself) lives in the callback, so a second click reaches {@link ReactionRule}, whose answer is better than the button's
  * generic "already used". What is said goes through chat as the clicker, so formats, filters and mutes
  * apply as if they had typed it.
  */
@@ -79,19 +81,21 @@ public final class ReactionService implements IEssentialsService {
         String subjectName = subject.getName();
         Set<UUID> reacted = ConcurrentHashMap.newKeySet();
         server.getConsoleSender().sendMessage(line);
+        Component withButton = null;
         for (Player recipient : server.getOnlinePlayers()) {
             if (recipient.getUniqueId().equals(subjectId)) {
                 recipient.sendMessage(line);
                 continue;
             }
-            Component button = buttons.label(messages.raw(reaction.buttonKey()))
-                    .tooltip(messages.raw(reaction.tooltipKey()))
-                    .forOnly(recipient.getUniqueId())
-                    .expiringIn(LIFETIME)
-                    .repeatable()
-                    .does(clicker -> react(clicker, subjectId, subjectName, reacted, reaction))
-                    .render();
-            recipient.sendMessage(line.append(Component.space()).append(button));
+            if (withButton == null) {
+                withButton = line.append(Component.space()).append(buttons.label(messages.raw(reaction.buttonKey()))
+                        .tooltip(messages.raw(reaction.tooltipKey()))
+                        .expiringIn(LIFETIME)
+                        .repeatable()
+                        .does(clicker -> react(clicker, subjectId, subjectName, reacted, reaction))
+                        .render());
+            }
+            recipient.sendMessage(withButton);
         }
     }
 

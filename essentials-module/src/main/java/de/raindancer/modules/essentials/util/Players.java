@@ -25,7 +25,23 @@ import java.util.function.Predicate;
  */
 public final class Players {
 
+    private static final String NO_SUCH_PLAYER = "essentials.no-such-player";
+
     private Players() {
+    }
+
+    /** Names the server knows that look like {@code typed}; only asked once somebody has been refused. */
+    private static List<String> didYouMean(Server server, String typed) {
+        if (server == null) {
+            return List.of();
+        }
+        List<String> known = new ArrayList<>();
+        for (OfflinePlayer person : server.getOfflinePlayers()) {
+            if (person.getName() != null) {
+                known.add(person.getName());
+            }
+        }
+        return de.raindancer.core.platform.util.Closest.to(typed, known, 3);
     }
 
     /** Somebody the server has actually seen, online or not — by name, or by nickname. */
@@ -81,18 +97,23 @@ public final class Players {
      */
     private static PlayerLookup resolved(Messages messages, Server server, CommandSender sender, String typed,
                                          boolean single, String nobodyKey) {
-        return resolved(messages, PlayerTargets.lookup(server, sender, typed), sender, single, nobodyKey);
+        return resolved(messages, PlayerTargets.lookup(server, sender, typed), sender, single, nobodyKey, server);
     }
 
     private static PlayerLookup resolved(Messages messages, PlayerLookup lookup, CommandSender sender,
-                                         boolean single, String nobodyKey) {
+                                         boolean single, String nobodyKey, Server server) {
         String typed = lookup.typed();
         if (lookup.kind() == PlayerLookup.Kind.SELECTOR_REFUSED) {
             messages.send(sender, "essentials.player.selector-refused", "selector", typed);
             return null;
         }
         if (lookup.isEmpty()) {
-            messages.send(sender, nobodyKey, "player", typed);
+            List<String> maybe = NO_SUCH_PLAYER.equals(nobodyKey) ? didYouMean(server, typed) : List.of();
+            if (maybe.isEmpty()) {
+                messages.send(sender, nobodyKey, "player", typed);
+            } else {
+                messages.send(sender, NO_SUCH_PLAYER + "-maybe", "player", typed, "maybe", String.join(", ", maybe));
+            }
             return null;
         }
         if (single && lookup.matches().size() > 1) {
@@ -131,7 +152,7 @@ public final class Players {
 
     /** The same for a lookup the caller already made, so a selector is not evaluated twice. */
     public static Optional<OfflinePlayer> one(Messages messages, PlayerLookup lookup, CommandSender sender) {
-        PlayerLookup checked = resolved(messages, lookup, sender, true, "essentials.no-such-player");
+        PlayerLookup checked = resolved(messages, lookup, sender, true, NO_SUCH_PLAYER, null);
         return checked == null ? Optional.empty() : checked.single();
     }
 

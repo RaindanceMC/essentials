@@ -5,7 +5,8 @@ essentials:
   only-a-player: "<red>Only a player can do that."
   no-permission: "<red>You may not do that."
   usage: "<gray>Usage: <white><usage>"
-  no-such-player: "<red>The server has never seen anybody called <white><player></white>."
+  no-such-player: "<red>The server has never seen anybody called <white><player></white>. <gray>Check the spelling — Tab completes names."
+  no-such-player-maybe: "<red>The server has never seen anybody called <white><player></white>. <gray>Did you mean <white><maybe></white>?"
   player:
     offline: "<red><white><player></white> is offline right now."
     selector-refused: "<red>Selectors like <white><selector></white> are not yours to use here, or that one is malformed. Type a name instead."
@@ -32,7 +33,7 @@ essentials:
     not-yourself: "<red>You cannot message yourself. Try a notebook."
     sent: "<gray>[me → <white><player></white>] <text>"
     received: "<gray>[<white><player></white> → me] <text>"
-    nobody-to-reply-to: "<red>Nobody has messaged you yet. Popularity takes time."
+    nobody-to-reply-to: "<red>Nobody has messaged you yet. Popularity takes time. <gray>Start a conversation with <white>/msg [player] [text]</white>."
 
   # ── ignoring ──────────────────────────────────────────────────────────────
   ignore:
@@ -94,6 +95,7 @@ essentials:
   # ── /enchant ──────────────────────────────────────────────────────────────
   enchant:
     unknown: "<red>There is no enchantment called <white><enchantment></white>. Tab completion shows the available ones."
+    unknown-maybe: "<red>There is no enchantment called <white><enchantment></white>. <gray>Did you mean <white><maybe></white>?"
     nobody-there: "<red>Nobody here answers to <white><player></white>."
     nothing-held: "<red>Nothing in the hand to enchant."
     not-others: "<red>Enchanting what somebody else is holding is staff business."

@@ -105,6 +105,11 @@ public final class Enchantments {
         return found;
     }
 
+    /** Up to three of {@code keys} that look like what was typed. */
+    public static List<String> closest(String typed, java.util.Collection<String> keys) {
+        return de.raindancer.core.platform.util.Closest.to(normalise(typed), keys, 3);
+    }
+
     public static List<String> keys() {
         return all().stream().map(Enchantments::keyOf).toList();
     }

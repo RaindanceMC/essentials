@@ -65,7 +65,13 @@ public final class EnchantCommand implements IEssentialsCommand {
         }
         Optional<Enchantment> found = Enchantments.find(args[0]);
         if (found.isEmpty()) {
-            live.messages().send(sender, "essentials.enchant.unknown", "enchantment", args[0]);
+            List<String> maybe = Enchantments.closest(args[0], Enchantments.keys());
+            if (maybe.isEmpty()) {
+                live.messages().send(sender, "essentials.enchant.unknown", "enchantment", args[0]);
+            } else {
+                live.messages().send(sender, "essentials.enchant.unknown-maybe", "enchantment", args[0],
+                        "maybe", String.join(", ", maybe));
+            }
             return;
         }
         Optional<Integer> typedLevel = args.length > 1 ? EnchantRule.parseLevel(args[1]) : Optional.empty();

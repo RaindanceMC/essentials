@@ -49,4 +49,14 @@ class EnchantmentsTest {
         assertThat(Enchantments.resolve("other:boost", known)).contains(new org.bukkit.NamespacedKey("other", "boost"));
         assertThat(Enchantments.resolve("nothing", known)).isEmpty();
     }
+
+    @Test
+    @DisplayName("a mistyped enchantment is matched to the nearest ones, a hopeless word to none")
+    void closest() {
+        java.util.List<String> keys = java.util.List.of("sharpness", "smite", "fire_aspect", "fortune", "unbreaking");
+
+        assertThat(Enchantments.closest("sharpnes", keys)).containsExactly("sharpness");
+        assertThat(Enchantments.closest("Fire Apsect", keys)).containsExactly("fire_aspect");
+        assertThat(Enchantments.closest("qqqqqqqq", keys)).isEmpty();
+    }
 }

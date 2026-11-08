@@ -165,4 +165,14 @@ class PlayersLookupTest {
                 .isGreaterThan(offered.indexOf("@s"));
         assertThat(Players.suggest(server, viewer, "Spooky", vanish)).contains("Spooky");
     }
+
+    @Test
+    @DisplayName("a misspelt name is answered with who it may have meant, and a hopeless one with the plain refusal")
+    void didYouMean() {
+        assertThat(Players.one(messages, server, sender, "OldGost")).isEmpty();
+        assertThat(Players.one(messages, server, sender, "Zzzzzzzz")).isEmpty();
+
+        verify(messages).send(sender, "essentials.no-such-player-maybe", "player", "OldGost", "maybe", "OldGhost");
+        verify(messages).send(sender, "essentials.no-such-player", "player", "Zzzzzzzz");
+    }
 }

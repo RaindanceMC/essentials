@@ -11,7 +11,7 @@ essentials:
     arrived: "<green>You have arrived at spawn."
   msg:
     not-yourself: "<red>You cannot message yourself."
-    nobody-to-reply-to: "<red>Nobody has messaged you yet."
+    nobody-to-reply-to: "<red>Nobody has messaged you yet. <gray>Start a conversation with <white>/msg [player] [text]</white>."
   ignore:
     started: "<green>You will no longer see messages from <white><player></white>."
   nick:
