@@ -13,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,8 +37,6 @@ import java.util.UUID;
 public final class NickMenu extends Menu {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
-    private static final Duration PATIENCE = Duration.ofMinutes(2);
-    private static final String PROMPT_OWNER = "nick";
 
     private final EssentialsServices services;
 
@@ -101,17 +98,10 @@ public final class NickMenu extends Menu {
                 event -> new BlocklistMenu(services, viewer, this).open());
     }
 
+    /** In the game's own dialog, not in chat: the player stays in the menus and comes back here either way. */
     private void promptForNickname() {
-        boolean asked = services.core().prompts().ask(viewer.getUniqueId(), PROMPT_OWNER, PATIENCE,
-                this::onAnswered, this::reopenElsewhere);
-        if (!asked) {
-            services.chat().tell(viewer,
-                    "<red>You are already being asked something else. Finish that conversation first.");
-            return;
-        }
-        services.chat().tell(viewer,
-                "<gray>Type your new nickname in chat, or \"cancel\" to leave it as it is.");
-        viewer.closeInventory();
+        de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "Your nickname", "",
+                de.raindancer.core.ui.prompt.Parsers.text(32), this::onAnswered, this::reopenElsewhere);
     }
 
     /**
@@ -136,7 +126,9 @@ public final class NickMenu extends Menu {
     private void askForTheirs(UUID who) {
         OfflinePlayer target = services.server().getOfflinePlayer(who);
         Scheduling.entityLater(services.plugin(), viewer, 1L, () -> {
-            boolean asked = services.core().prompts().ask(viewer.getUniqueId(), PROMPT_OWNER, PATIENCE,
+            String name = target.getName() == null ? who.toString() : target.getName();
+            de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "Nickname for " + name + " — clear takes it off", "",
+                    de.raindancer.core.ui.prompt.Parsers.text(32),
                     typed -> Scheduling.entity(services.plugin(), viewer, () -> {
                         boolean off = typed.strip().equalsIgnoreCase("clear") || typed.strip().equalsIgnoreCase("off");
                         if (off) {
@@ -146,15 +138,6 @@ public final class NickMenu extends Menu {
                             services.nicknames().set(viewer, target, typed).whenComplete((took, failure) -> reopenWhenStored());
                         }
                     }), this::reopenElsewhere);
-            if (!asked) {
-                services.chat().tell(viewer,
-                        "<red>You are already being asked something else. Finish that conversation first.");
-                return;
-            }
-            services.chat().tell(viewer, "<gray>Type the new nickname for <white>"
-                    + (target.getName() == null ? who.toString() : target.getName())
-                    + "</white>, \"clear\" to take theirs off, or \"cancel\" to leave it.");
-            viewer.closeInventory();
         });
     }
 
