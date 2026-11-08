@@ -146,17 +146,13 @@ public final class RuleMenu extends Menu {
         refresh();
     }
 
+    /** In the game's dialog, not in chat; the page comes back either way. */
     private void ask(String key, Consumer<String> answered) {
-        viewer.closeInventory();
-        services.messages().send(viewer, key);
-        boolean asked = services.core().prompts().ask(viewer.getUniqueId(), "Essentials", RulesMenu.PROMPT_TIMEOUT,
+        de.raindancer.core.ui.prompt.AnvilInput.open(viewer, RulesMenu.titleFor(key), "", de.raindancer.core.ui.prompt.Parsers.text(200),
                 typed -> {
                     answered.accept(typed);
                     open();
                 },
                 this::open);
-        if (!asked) {
-            services.messages().send(viewer, "essentials.rules.already-asking");
-        }
     }
 }

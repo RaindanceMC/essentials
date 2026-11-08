@@ -109,16 +109,11 @@ public final class RulePresetsMenu extends PaginatedMenu<RulePreset> {
     }
 
     private void askName() {
-        viewer.closeInventory();
-        services.messages().send(viewer, "essentials.rules.type-preset-name");
-        boolean asked = services.core().prompts().ask(viewer.getUniqueId(), "Essentials", RulesMenu.PROMPT_TIMEOUT,
+        de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "A name for the preset", "", de.raindancer.core.ui.prompt.Parsers.name(32),
                 typed -> {
                     services.rules().savePreset(viewer, typed, "");
                     open();
                 },
                 this::open);
-        if (!asked) {
-            services.messages().send(viewer, "essentials.rules.already-asking");
-        }
     }
 }

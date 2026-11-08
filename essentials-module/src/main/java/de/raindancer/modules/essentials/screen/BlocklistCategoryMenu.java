@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import java.util.List;
  */
 public final class BlocklistCategoryMenu extends PaginatedMenu<String> {
 
-    private static final Duration PROMPT_TIMEOUT = Duration.ofSeconds(30);
 
     private final EssentialsServices services;
     private final String categoryId;
@@ -71,10 +69,7 @@ public final class BlocklistCategoryMenu extends PaginatedMenu<String> {
     }
 
     private void askAddName() {
-        viewer.closeInventory();
-        services.messages().send(viewer, "essentials.blocklist.type-a-name");
-        boolean asked = services.core().prompts().ask(viewer.getUniqueId(), "Essentials",
-                PROMPT_TIMEOUT,
+        de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "The name to add", "", de.raindancer.core.ui.prompt.Parsers.text(64),
                 typed -> {
                     if (services.blocklist().addName(categoryId, typed)) {
                         services.messages().send(viewer, "essentials.blocklist.added",
@@ -83,8 +78,5 @@ public final class BlocklistCategoryMenu extends PaginatedMenu<String> {
                     open();
                 },
                 this::open);
-        if (!asked) {
-            services.messages().send(viewer, "essentials.blocklist.already-asking");
-        }
     }
 }

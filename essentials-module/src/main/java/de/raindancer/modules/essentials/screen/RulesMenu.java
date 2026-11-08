@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import java.util.List;
  */
 public final class RulesMenu extends PaginatedMenu<HouseRule> {
 
-    static final Duration PROMPT_TIMEOUT = Duration.ofSeconds(60);
 
     private final EssentialsServices services;
 
@@ -108,14 +106,19 @@ public final class RulesMenu extends PaginatedMenu<HouseRule> {
         });
     }
 
+    /** In the game's dialog, not in chat; a cancel brings this page back. */
     private void ask(String key, java.util.function.Consumer<String> answered) {
-        viewer.closeInventory();
-        services.messages().send(viewer, key);
-        boolean asked = services.core().prompts().ask(viewer.getUniqueId(), "Essentials", PROMPT_TIMEOUT,
-                answered, this::open);
-        if (!asked) {
-            services.messages().send(viewer, "essentials.rules.already-asking");
-        }
+        de.raindancer.core.ui.prompt.AnvilInput.open(viewer, titleFor(key), "", de.raindancer.core.ui.prompt.Parsers.text(200), answered, this::open);
+    }
+
+    /** What the game's dialog asks for, per prompt key — the chat wording said "in chat" and how long one had. */
+    static String titleFor(String key) {
+        return switch (key) {
+            case "essentials.rules.type-title" -> "The rule's title";
+            case "essentials.rules.type-text" -> "What the rule says";
+            case "essentials.rules.type-penalties" -> "What breaking it costs: warn, mute 1h, ban 3d";
+            default -> "Type it";
+        };
     }
 
     static String escaped(String text) {
