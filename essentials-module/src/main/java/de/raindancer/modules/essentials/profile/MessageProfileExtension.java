@@ -11,7 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,8 +26,6 @@ import java.util.UUID;
  */
 public final class MessageProfileExtension implements ProfileExtension {
 
-    private static final Duration PATIENCE = Duration.ofMinutes(2);
-    private static final String PROMPT_OWNER = "profile-message";
 
     private final EssentialsServices services;
 
@@ -66,17 +63,10 @@ public final class MessageProfileExtension implements ProfileExtension {
                 : services.messaging().findElsewhere(subject.getName(), services.core()::playersElsewhere);
     }
 
+    /** In the game's own dialog, not in chat: a message typed with the profile still a click away. */
     private void promptAndSend(Player viewer, UUID to, String name) {
-        viewer.closeInventory();
-        boolean asked = services.core().prompts().ask(viewer.getUniqueId(), PROMPT_OWNER, PATIENCE,
-                typed -> onAnswered(viewer, to, name, typed), () -> { });
-        if (!asked) {
-            services.chat().tell(viewer,
-                    "<red>You are already being asked something else. Finish that conversation first.");
-            return;
-        }
-        services.chat().tell(viewer, "<gray>Type your message to <white>" + name
-                + "</white> in chat, or <white>cancel</white>.");
+        de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "A message to " + name, "",
+                de.raindancer.core.ui.prompt.Parsers.text(200), typed -> onAnswered(viewer, to, name, typed), () -> { });
     }
 
     /**
