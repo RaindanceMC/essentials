@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.37.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.38.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -68,6 +68,7 @@ public final class EssentialsModule implements FlexModule {
         log = context.log();
         Server server = context.plugin().getServer();
         settings = context.settings(EssentialsSettings.class, EssentialsSettings.DEFAULTS);
+        var bugSettings = context.settings(BugReportSettings.class, BugReportSettings.DEFAULTS);
 
         // The module's own wording, offered as a floor below anything the owner has written — never
         // Messages.load, which would throw away Core's own lines and every other module's with them.
@@ -250,6 +251,14 @@ public final class EssentialsModule implements FlexModule {
                         () -> nicknames.apply(online));
             }
         });
+
+        de.raindancer.modules.essentials.service.BugReportService bugReports =
+                new de.raindancer.modules.essentials.service.BugReportService(context.plugin(), context.core(),
+                        context.core().messages(), bugSettings::current, log);
+        bugSettings.onChange(fresh -> bugReports.settingsChanged());
+        bugReports.start();
+        context.closeWith(bugReports::stop);
+        EssentialsCommands.ready(bugReports);
 
         context.listener(new EssentialsSessionListener(services));
         // Vanishing and coming back read as this module's own quit and join lines, not vanilla's.

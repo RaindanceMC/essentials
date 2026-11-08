@@ -31,6 +31,7 @@ import java.util.List;
 public final class EssentialsCommands {
 
     private static volatile EssentialsServices services;
+    private static volatile de.raindancer.modules.essentials.service.BugReportService bugReports;
 
     private EssentialsCommands() {
     }
@@ -111,6 +112,10 @@ public final class EssentialsCommands {
                         .taking("(nothing) — roasts yourself", "<player> — roasts them"),
                 ModuleCommand.of("joke", "Tells a random, truly terrible joke in chat, as you",
                         new JokeCommand(EssentialsCommands::require)),
+                ModuleCommand.of("bugreport", "Reports a bug, an idea or a problem to the team, or +1s a reported one",
+                                new de.raindancer.modules.essentials.command.BugReportCommand(
+                                        EssentialsCommands::require, EssentialsCommands::requireBugReports))
+                        .aliased("bug", "reportbug", "feedback"),
 
                 ModuleCommand.of("rules", "Shows the server's rules; staff edit them and their presets",
                                 new de.raindancer.modules.essentials.command.RulesCommand(EssentialsCommands::require))
@@ -137,13 +142,26 @@ public final class EssentialsCommands {
         services = live;
     }
 
+    static void ready(de.raindancer.modules.essentials.service.BugReportService live) {
+        bugReports = live;
+    }
+
     /** Called when it stops, so a command run afterwards refuses rather than using half-shut services. */
     static void stopped() {
         services = null;
+        bugReports = null;
     }
 
     public static boolean isRunning() {
         return services != null;
+    }
+
+    private static de.raindancer.modules.essentials.service.BugReportService requireBugReports() {
+        de.raindancer.modules.essentials.service.BugReportService live = bugReports;
+        if (live == null) {
+            throw new IllegalStateException("the essentials module is not running");
+        }
+        return live;
     }
 
     private static EssentialsServices require() {

@@ -29,6 +29,7 @@ public final class PermissionNodes {
     public static final String AFK = "essentials.afk";
     public static final String ROAST = "essentials.roast";
     public static final String JOKE = "essentials.joke";
+    public static final String BUGREPORT = "essentials.bugreport";
     /** Roasting and joking without waiting between them. */
     public static final String FUN_NO_COOLDOWN = "essentials.fun.no-cooldown";
 
@@ -89,6 +90,8 @@ public final class PermissionNodes {
                 new Permission(AFK, "Mark yourself away from the keyboard", PermissionDefault.TRUE),
                 new Permission(ROAST, "Roast somebody, or yourself, in chat with /roast", PermissionDefault.TRUE),
                 new Permission(JOKE, "Tell a terrible joke in chat with /joke", PermissionDefault.TRUE),
+                new Permission(BUGREPORT, "Report bugs and ideas with /bugreport, and +1 reported ones",
+                        PermissionDefault.TRUE),
                 new Permission(FUN_NO_COOLDOWN, "Use /roast and /joke without waiting in between",
                         PermissionDefault.OP),
                 new Permission(ENCHANT, "Enchant the item in your hand with /enchant", PermissionDefault.OP),

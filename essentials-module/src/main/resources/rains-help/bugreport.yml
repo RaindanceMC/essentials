@@ -1,0 +1,31 @@
+id: bugreport
+title: Reporting bugs and ideas
+summary: Tell the team about a bug, an idea or a problem — or say that something already reported happened to you too.
+intro: |
+  Found something broken, or wish something worked differently? Tell the team straight from the game — it lands where they work on the server.
+icon: WRITABLE_BOOK
+category: Getting started
+order: 40
+module: essentials
+aliases: [bug, reportbug, feedback]
+keywords: [bug, report, idea, feature, problem, issue, broken, suggestion]
+commands: [bugreport]
+related: [basics]
+sections:
+  - question: How do I report a bug?
+    title: Reporting
+    text: |
+      Type {run:/bugreport}. Pick what it is — a <b>bug</b>, a <b>feature request</b> or <b>another problem</b> — then where in the game it happens.
+      You see what others already reported there. If yours is new, take the book, give it a short title and say what happened and how the team can see it again.
+  - question: Somebody already reported it — now what?
+    title: It happened to me too
+    text: |
+      Click their report. That counts you in (+1), so the team sees how many players it hits. Once per report is enough.
+  - question: What is sent with my report?
+    title: What goes along
+    text: |
+      Your name and id, the time, this server and where you stood, your playtime, ping, game mode and client, how the server was doing, and the versions of the server and its plugins. Only the team can read it.
+  - question: Why can't I send another one right away?
+    title: One at a time
+    text: |
+      After a report you wait a few minutes before the next — +1s you can give any time.
