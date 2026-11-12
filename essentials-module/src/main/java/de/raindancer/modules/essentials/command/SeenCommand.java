@@ -102,7 +102,7 @@ public final class SeenCommand implements IEssentialsCommand {
             Optional<NetworkWho.Found> elsewhere = live.who().elsewhere(sender, them.getUniqueId());
             if (elsewhere.isPresent()) {
                 live.messages().send(sender, "essentials.seen.online-elsewhere",
-                        "player", Players.nameOf(them), "server", elsewhere.get().server());
+                        "player", Players.nameOf(them), "server", live.who().nameOf(elsewhere.get().server()));
                 return;
             }
         }

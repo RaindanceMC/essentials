@@ -34,6 +34,8 @@ class ListAndWhereCommandTest {
 
     @BeforeEach
     void wire() {
+        // As on a network that has not named its servers: the id. ServerNamesTest covers the naming itself.
+        org.mockito.Mockito.lenient().when(who.nameOf(org.mockito.ArgumentMatchers.any())).thenAnswer(call -> call.getArgument(0));
         when(live.messages()).thenReturn(messages);
         when(live.who()).thenReturn(who);
         when(live.server()).thenReturn(mock(Server.class));

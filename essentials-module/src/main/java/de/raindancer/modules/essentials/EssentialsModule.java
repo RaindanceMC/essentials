@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.40.1")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.40.2")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -131,6 +131,11 @@ public final class EssentialsModule implements FlexModule {
                 });
         if (context.core().networkPlayers().isPresent() && context.core().networkCalls().isPresent()) {
             whoIsWhere.connect(context.core().networkPlayers().get(), context.core().networkCalls().get());
+            try {
+                whoIsWhere.named(context.core()::serverName);
+            } catch (LinkageError olderCore) {
+                // RainsCore before 2.88.0 has no serverName(id): servers stay named by their id.
+            }
             context.closeWith(whoIsWhere::disconnect);
         }
         NicknameService nicknames = new NicknameService(store, blocklist,

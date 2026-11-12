@@ -65,6 +65,8 @@ public final class NetworkWho implements IEssentialsService {
     private volatile NetworkCalls calls;
     private volatile NetworkBus.Subscription answering;
     private volatile Duration timeout = Duration.ofSeconds(4);
+    /** Server id → the name players know it by (Core's serverName); the id itself until the module says. */
+    private volatile java.util.function.UnaryOperator<String> names = id -> id;
 
     public NetworkWho(Server server, Vanish vanish, Locator locator) {
         this.server = server;
@@ -75,6 +77,24 @@ public final class NetworkWho implements IEssentialsService {
     @Override
     public void settings(EssentialsSettings fresh) {
         // Nothing here reads a setting.
+    }
+
+    /** How a server id is named to players. */
+    public void named(java.util.function.UnaryOperator<String> naming) {
+        this.names = naming == null ? id -> id : naming;
+    }
+
+    /** A server as players know it: "Hyades", not "beta". Blank stays blank (off a network). */
+    public String nameOf(String serverId) {
+        if (serverId == null || serverId.isBlank()) {
+            return serverId == null ? "" : serverId;
+        }
+        try {
+            String named = names.apply(serverId);
+            return named == null || named.isBlank() ? serverId : named;
+        } catch (RuntimeException unknown) {
+            return serverId;
+        }
     }
 
     public void connect(NetworkPlayers directory, NetworkCalls network) {

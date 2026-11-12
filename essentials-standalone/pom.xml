@@ -92,7 +92,8 @@
         <!-- 1.33.0: screens for /screen — who is away, the server rules, everybody's own nickname/status/ignores (RainsCore 2.10). -->
         <!-- 1.40.0: music on logging on (joinmusic settings, /joinmusic to switch it off), Core 2.85.0. -->
         <!-- 1.40.1: the join music settings have keys of their own (join-music.*), apart from the bug reports' enabled. -->
-        <plugin.version>1.40.1</plugin.version>
+        <!-- 1.40.2: /list, /where and /seen name servers as players know them ("Hyades"), not by id ("beta"). -->
+        <plugin.version>1.40.2</plugin.version>
     </properties>
 
     <dependencies>

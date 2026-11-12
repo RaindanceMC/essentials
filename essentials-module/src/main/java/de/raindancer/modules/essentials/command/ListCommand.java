@@ -42,7 +42,7 @@ public final class ListCommand implements IEssentialsCommand {
                 "servers", String.valueOf(groups.stream().filter(group -> !group.players().isEmpty()).count()));
         for (NetworkWho.Group group : groups) {
             live.messages().send(sender, group.self() ? "essentials.list.this-server" : "essentials.list.server",
-                    "server", group.server(), "count", String.valueOf(group.players().size()),
+                    "server", who.nameOf(group.server()), "count", String.valueOf(group.players().size()),
                     "players", names(group));
         }
     }

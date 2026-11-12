@@ -63,7 +63,7 @@ public final class WhereCommand implements IEssentialsCommand {
 
     private static void say(EssentialsServices live, CommandSender sender, NetworkWho.Found there,
                             Optional<NetworkWho.Spot> spot) {
-        String where = live.who().isNetwork() ? there.server() : "";
+        String where = live.who().isNetwork() ? live.who().nameOf(there.server()) : "";
         String key = there.self() ? "essentials.where.here" : "essentials.where.there";
         if (spot.isPresent()) {
             key += "-at";
