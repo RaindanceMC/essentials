@@ -20,16 +20,16 @@ public record JoinMusicSettings(
         @Describe("Whether a track plays to everybody as they log on. Every .ogg (Vorbis) in "
                 + "plugins/RainsEssentials/music is one, picked at random; new tracks come with the next restart. "
                 + "Each player can switch it off for themselves with /joinmusic.")
-        @Key("enabled") boolean enabled,
+        @Key("join-music.enabled") boolean enabled,
 
         @In("joinmusic") @Title("Volume (%)")
         @Range(min = 1, max = 100)
-        @Key("volume") int volume,
+        @Key("join-music.volume") int volume,
 
         @In("joinmusic") @Title("Credit")
         @Describe("A line under the music when it starts, e.g. the track and its artist when the licence asks "
                 + "for it. Empty: none.")
-        @Key("credit") String credit) {
+        @Key("join-music.credit") String credit) {
 
     public static final JoinMusicSettings DEFAULTS = new JoinMusicSettings(false, 70, "");
 }

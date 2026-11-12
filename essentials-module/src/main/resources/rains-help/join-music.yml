@@ -13,7 +13,7 @@ commands: [joinmusic]
 sections:
   - question: Can I switch the music off?
     title: Switching it off
-    when: joinmusic:enabled
+    when: joinmusic:join-music.enabled
     text: |
       Yes: {run:/joinmusic off}, or click the line under the music when it starts. It stops at once and stays off, also on the next log-on. {run:/joinmusic on} brings it back.
   - question: Why don't I hear anything?
