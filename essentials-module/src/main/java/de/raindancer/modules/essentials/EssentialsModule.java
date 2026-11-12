@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.39.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.40.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -260,6 +260,19 @@ public final class EssentialsModule implements FlexModule {
         context.closeWith(bugReports::stop);
         EssentialsCommands.ready(bugReports);
 
+        var joinMusicSettings = context.settings(JoinMusicSettings.class, JoinMusicSettings.DEFAULTS);
+        java.util.List<de.raindancer.core.content.music.Track> joinTracks = joinMusicTracks(context);
+        de.raindancer.modules.essentials.service.JoinMusicService joinMusic =
+                new de.raindancer.modules.essentials.service.JoinMusicService(context.plugin(),
+                        joinMusicSettings::current, () -> joinTracks, context.core().resourcePacks(),
+                        context.core().messages(), System::currentTimeMillis);
+        context.closeWith(joinMusic::stopAll);
+        context.listener(new de.raindancer.modules.essentials.listener.JoinMusicListener(joinMusic));
+        EssentialsCommands.ready(joinMusic);
+        if (joinMusicSettings.current().enabled()) {
+            log.info("Music on logging on: {} track(s).", joinTracks.size());
+        }
+
         context.listener(new EssentialsSessionListener(services));
         // Vanishing and coming back read as this module's own quit and join lines, not vanilla's.
         de.raindancer.core.social.presence.PresenceLines.Voice voice = new de.raindancer.core.social.presence.PresenceLines.Voice() {
@@ -307,6 +320,20 @@ public final class EssentialsModule implements FlexModule {
     @Override
     public List<ModuleCommand> commands() {
         return EssentialsCommands.declared();
+    }
+
+    /** plugins/RainsEssentials/music, offered to the server's resource pack. */
+    private java.util.List<de.raindancer.core.content.music.Track> joinMusicTracks(ModuleContext context) {
+        try {
+            de.raindancer.core.content.music.MusicPack pack = de.raindancer.core.content.music.MusicPack.offer(
+                    context.plugin(), context.core().resourcePacks(), "Essentials", "rainsessentials",
+                    "Rain's Essentials — music on logging on");
+            context.closeWith(pack::withdraw);
+            return pack.tracks();
+        } catch (java.io.IOException failure) {
+            log.warn("The music for logging on could not be read ({}); none plays.", failure.getMessage());
+            return java.util.List.of();
+        }
     }
 
     @Override

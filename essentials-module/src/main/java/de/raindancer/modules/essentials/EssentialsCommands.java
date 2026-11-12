@@ -32,6 +32,7 @@ public final class EssentialsCommands {
 
     private static volatile EssentialsServices services;
     private static volatile de.raindancer.modules.essentials.service.BugReportService bugReports;
+    private static volatile de.raindancer.modules.essentials.service.JoinMusicService joinMusic;
 
     private EssentialsCommands() {
     }
@@ -120,6 +121,12 @@ public final class EssentialsCommands {
                                         EssentialsCommands::require, EssentialsCommands::requireBugReports))
                         .aliased("bug", "reportbug", "feedback"),
 
+                ModuleCommand.of("joinmusic", "Switches the music when you log on off, or back on",
+                                new de.raindancer.modules.essentials.command.JoinMusicCommand(
+                                        () -> require().messages(), EssentialsCommands::requireJoinMusic))
+                        .aliased("loginmusic")
+                        .taking("(nothing) — off, or back on", "on", "off"),
+
                 ModuleCommand.of("rules", "Shows the server's rules; staff edit them and their presets",
                                 new de.raindancer.modules.essentials.command.RulesCommand(EssentialsCommands::require))
                         .taking("(nothing) — every rule", "<number> — one rule",
@@ -149,10 +156,15 @@ public final class EssentialsCommands {
         bugReports = live;
     }
 
+    static void ready(de.raindancer.modules.essentials.service.JoinMusicService live) {
+        joinMusic = live;
+    }
+
     /** Called when it stops, so a command run afterwards refuses rather than using half-shut services. */
     static void stopped() {
         services = null;
         bugReports = null;
+        joinMusic = null;
     }
 
     public static boolean isRunning() {
@@ -161,6 +173,14 @@ public final class EssentialsCommands {
 
     private static de.raindancer.modules.essentials.service.BugReportService requireBugReports() {
         de.raindancer.modules.essentials.service.BugReportService live = bugReports;
+        if (live == null) {
+            throw new IllegalStateException("the essentials module is not running");
+        }
+        return live;
+    }
+
+    private static de.raindancer.modules.essentials.service.JoinMusicService requireJoinMusic() {
+        de.raindancer.modules.essentials.service.JoinMusicService live = joinMusic;
         if (live == null) {
             throw new IllegalStateException("the essentials module is not running");
         }

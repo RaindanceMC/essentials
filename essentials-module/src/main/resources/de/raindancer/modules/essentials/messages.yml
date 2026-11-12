@@ -151,6 +151,12 @@ essentials:
     removed: "<yellow>Removed <white><name></white> from <white><category></white>."
 
   # ── AFK ───────────────────────────────────────────────────────────────────
+  joinmusic:
+    playing: "<dark_gray>♪ <gray><credit> <dark_gray>· <click:run_command:'/joinmusic off'><hover:show_text:'<gray>No music when you log on'><gray><u>/joinmusic off</u></hover></click>"
+    playing-plain: "<dark_gray>♪ <gray>Music on logging on <dark_gray>· <click:run_command:'/joinmusic off'><hover:show_text:'<gray>No music when you log on'><gray><u>/joinmusic off</u></hover></click>"
+    switched-on: "<green>Music when you log on is back on."
+    switched-off: "<gray>No more music when you log on. <white>/joinmusic</white> brings it back."
+    usage: "<red>Usage: /joinmusic [on|off]"
   afk:
     went: "<gray>* <white><player></white> is now AFK."
     back: "<gray>* <white><player></white> is back."
