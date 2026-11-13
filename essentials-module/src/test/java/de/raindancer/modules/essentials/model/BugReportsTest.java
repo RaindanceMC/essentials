@@ -85,4 +85,20 @@ class BugReportsTest {
         assertThat(key).hasSize(16).doesNotContain(ADA.toString().substring(0, 8));
         assertThat(BugReports.reporterKey(ADA)).isEqualTo(key);
     }
+
+    @org.junit.jupiter.api.Test
+    @org.junit.jupiter.api.DisplayName("a Prime member's feature request is marked and labelled prime, so it is looked at first")
+    void primeIdeasJumpTheQueue() {
+        BugReports.Area area = new BugReports.Area("Guilds", "area: Guilds", "WHITE_BANNER");
+        org.assertj.core.api.Assertions.assertThat(BugReports.labels(BugReports.Kind.IDEA, area, true))
+                .containsExactly("feature request", "area: Guilds", BugReports.PRIME_LABEL);
+        org.assertj.core.api.Assertions.assertThat(BugReports.labels(BugReports.Kind.IDEA, area, false))
+                .containsExactly("feature request", "area: Guilds");
+        org.assertj.core.api.Assertions.assertThat(BugReports.labels(BugReports.Kind.BUG, area, true))
+                .as("only ideas get the priority").doesNotContain(BugReports.PRIME_LABEL);
+        org.assertj.core.api.Assertions.assertThat(BugReports.title(BugReports.Kind.IDEA, "  Pets can swim ", true))
+                .isEqualTo("💎 Pets can swim");
+        org.assertj.core.api.Assertions.assertThat(BugReports.title(BugReports.Kind.BUG, "Pets drown", true))
+                .isEqualTo("Pets drown");
+    }
 }

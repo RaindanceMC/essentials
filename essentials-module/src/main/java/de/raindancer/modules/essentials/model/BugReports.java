@@ -115,12 +115,24 @@ public final class BugReports {
         return out.toString();
     }
 
+    /** On a Prime member's feature request: Prime's ideas are looked at first. */
+    public static final String PRIME_LABEL = "prime";
+
     public static List<String> labels(Kind kind, Area area) {
         return List.of(kind.label(), area.label());
     }
 
+    public static List<String> labels(Kind kind, Area area, boolean prime) {
+        return prime && kind == Kind.IDEA ? List.of(kind.label(), area.label(), PRIME_LABEL) : labels(kind, area);
+    }
+
     public static String title(Report report) {
         return report.title().strip();
+    }
+
+    public static String title(Kind kind, String title, boolean prime) {
+        String plain = title.strip();
+        return prime && kind == Kind.IDEA ? "💎 " + plain : plain;
     }
 
     public static String body(Report report) {

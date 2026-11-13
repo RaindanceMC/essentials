@@ -206,12 +206,14 @@ public final class BugReportService {
             return;
         }
         BugReports.Report report = new BugReports.Report(kind, area, title, description, context(who));
+        // Prime's feature requests are looked at first: marked in the title and labelled.
+        boolean prime = who.hasPermission("rains.prime");
         String repository = settings.get().repository();
         messages.send(who, "essentials.bugreport.sending");
         Scheduling.async(plugin, () -> {
             try {
-                int number = github.create(repository, BugReports.title(report), BugReports.body(report),
-                        BugReports.labels(kind, area));
+                int number = github.create(repository, BugReports.title(kind, report.title(), prime),
+                        BugReports.body(report), BugReports.labels(kind, area, prime));
                 cache.remove(area.label());
                 log.info("{} filed bug report #{} ({}, {}).", who.getName(), number, kind.title(), area.name());
                 messages.send(who, "essentials.bugreport.sent", "number", String.valueOf(number));
