@@ -32,6 +32,7 @@ public final class WelcomeService implements IEssentialsService {
     private final Chat chat;
     private final ReactionService reactions;
     private final java.util.function.Supplier<String> serverName;
+    private final java.util.function.Function<Player, net.kyori.adventure.text.Component> shownName;
 
     private volatile EssentialsSettings settings;
 
@@ -42,6 +43,14 @@ public final class WelcomeService implements IEssentialsService {
     /** @param serverName what {@code <server>} says in the welcome — Core's server name */
     public WelcomeService(Messages messages, Chat chat, ReactionService reactions, EssentialsSettings settings,
                           java.util.function.Supplier<String> serverName) {
+        this(messages, chat, reactions, settings, serverName, who -> net.kyori.adventure.text.Component.text(who.getName()));
+    }
+
+    /** @param shownName how a joining or leaving player is named — Core's chat name, rank tag and badges included */
+    public WelcomeService(Messages messages, Chat chat, ReactionService reactions, EssentialsSettings settings,
+                          java.util.function.Supplier<String> serverName,
+                          java.util.function.Function<Player, net.kyori.adventure.text.Component> shownName) {
+        this.shownName = shownName;
         this.messages = messages;
         this.chat = chat;
         this.reactions = reactions;
@@ -72,13 +81,14 @@ public final class WelcomeService implements IEssentialsService {
         }
         String server = serverName.get();
         String template = own.orElseGet(() -> messages.raw(key));
+        net.kyori.adventure.text.Component name = shownName.apply(who);
         if (!settings.sayHiButton() || !reactions.isClickable()) {
-            chat.broadcast(template, Chat.arg("player", who.getName()), Chat.arg("server", server));
+            chat.broadcast(template, Chat.formatted("player", name), Chat.arg("server", server));
             return;
         }
         reactions.broadcast(own.isPresent()
-                        ? chat.prefixed(template, Chat.arg("player", who.getName()), Chat.arg("server", server))
-                        : messages.prefixed(key, "player", who.getName(), "server", server),
+                        ? chat.prefixed(template, Chat.formatted("player", name), Chat.arg("server", server))
+                        : messages.prefixed(key, "player", name, "server", server),
                 who, ReactionService.HI);
     }
 
@@ -111,7 +121,7 @@ public final class WelcomeService implements IEssentialsService {
         if (!settings.joinQuitEnabled()) {
             return false;
         }
-        chat.broadcast(to, line(who, JoinLines.Kind.QUIT, "essentials.welcome.quit"), Chat.arg("player", who.getName()));
+        chat.broadcast(to, line(who, JoinLines.Kind.QUIT, "essentials.welcome.quit"), Chat.formatted("player", shownName.apply(who)));
         return true;
     }
 
@@ -120,14 +130,14 @@ public final class WelcomeService implements IEssentialsService {
         if (!settings.joinQuitEnabled()) {
             return false;
         }
-        chat.broadcast(to, line(who, JoinLines.Kind.JOIN, "essentials.welcome.joined"), Chat.arg("player", who.getName()));
+        chat.broadcast(to, line(who, JoinLines.Kind.JOIN, "essentials.welcome.joined"), Chat.formatted("player", shownName.apply(who)));
         return true;
     }
 
     public void quit(Player who) {
         if (settings.joinQuitEnabled()) {
             chat.broadcast(line(who, JoinLines.Kind.QUIT, "essentials.welcome.quit"),
-                    Chat.arg("player", who.getName()));
+                    Chat.formatted("player", shownName.apply(who)));
         }
     }
 

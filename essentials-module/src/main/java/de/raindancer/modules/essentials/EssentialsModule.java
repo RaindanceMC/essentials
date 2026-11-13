@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.43.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.44.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -161,7 +161,8 @@ public final class EssentialsModule implements FlexModule {
                 new de.raindancer.modules.essentials.service.ReactionService(context.core().messages(),
                         context.core().buttons(), server, context.plugin(), settings.current());
         WelcomeService welcome = new WelcomeService(context.core().messages(), context.chat(), reactions,
-                settings.current(), context.core()::serverName);
+                settings.current(), context.core()::serverName,
+                who -> context.core().identities().chatName(who.getUniqueId(), who.getName()));
 
         de.raindancer.modules.essentials.service.FunService fun =
                 new de.raindancer.modules.essentials.service.FunService(context.core().messages(),

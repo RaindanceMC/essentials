@@ -61,7 +61,37 @@ class WelcomeServiceTest {
 
         welcome.joined(ada, true);
 
-        verify(messages).prefixed("essentials.welcome.first-join", "player", "Ada", "server", "Lilly's SMP");
+        verify(messages).prefixed("essentials.welcome.first-join", "player", net.kyori.adventure.text.Component.text("Ada"),
+                "server", "Lilly's SMP");
+    }
+
+    @Test
+    @DisplayName("join and quit lines name them as chat does: rank tag, badges and colour")
+    void namedAsInChat() {
+        net.kyori.adventure.text.Component shown = net.kyori.adventure.text.Component.text("OWNER ")
+                .append(net.kyori.adventure.text.Component.text("Ada"));
+        when(ada.getName()).thenReturn("Ada");
+        when(messages.raw("essentials.welcome.joined")).thenReturn("<gray>+ <white><player></white> joined.");
+        when(messages.raw("essentials.welcome.quit")).thenReturn("<gray>- <white><player></white> left.");
+        ReactionService reactions = mock(ReactionService.class);
+        when(reactions.isClickable()).thenReturn(true);
+        WelcomeService welcome = new WelcomeService(messages, chat, reactions, EssentialsSettings.DEFAULTS,
+                () -> "Hyades", who -> shown);
+        java.util.List<net.kyori.adventure.text.minimessage.tag.resolver.TagResolver[]> said = new java.util.ArrayList<>();
+        org.mockito.Mockito.doAnswer(call -> {
+            Object[] all = call.getArguments();
+            said.add(java.util.Arrays.copyOfRange(all, 1, all.length, net.kyori.adventure.text.minimessage.tag.resolver.TagResolver[].class));
+            return null;
+        }).when(chat).broadcast(anyString(), any(net.kyori.adventure.text.minimessage.tag.resolver.TagResolver[].class));
+
+        welcome.joined(ada, false);
+        welcome.quit(ada);
+
+        verify(messages).prefixed("essentials.welcome.joined", "player", shown, "server", "Hyades");
+        net.kyori.adventure.text.Component quit = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                .deserialize("<gray>- <white><player></white> left.", said.getLast());
+        assertThat(net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(quit))
+                .isEqualTo("- OWNER Ada left.");
     }
 
     @org.junit.jupiter.api.AfterEach

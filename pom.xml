@@ -22,7 +22,7 @@
     <properties>
         <rainscore.version>2.94.0</rainscore.version>
         <modules-wrapper.version>1.11.0</modules-wrapper.version>
-        <essentials-module.version>1.43.0</essentials-module.version>
+        <essentials-module.version>1.44.0</essentials-module.version>
     </properties>
 
     <modules>
