@@ -1,5 +1,6 @@
 package de.raindancer.modules.essentials.service;
 
+import de.raindancer.core.ui.identity.JoinLines;
 import de.raindancer.core.ui.chat.Chat;
 import de.raindancer.core.ui.messages.Messages;
 import de.raindancer.modules.essentials.EssentialsSettings;
@@ -51,19 +52,30 @@ public final class WelcomeService implements IEssentialsService {
 
     public void joined(Player who, boolean firstJoin) {
         String key;
+        java.util.Optional<String> own = java.util.Optional.empty();
         if (firstJoin && settings.welcomeFirstJoin()) {
             key = "essentials.welcome.first-join";
         } else if (settings.joinQuitEnabled()) {
             key = "essentials.welcome.joined";
+            own = JoinLines.custom(who.getUniqueId(), JoinLines.Kind.JOIN);
         } else {
             return;
         }
         String server = serverName.get();
+        String template = own.orElseGet(() -> messages.raw(key));
         if (!settings.sayHiButton() || !reactions.isClickable()) {
-            chat.broadcast(messages.raw(key), Chat.arg("player", who.getName()), Chat.arg("server", server));
+            chat.broadcast(template, Chat.arg("player", who.getName()), Chat.arg("server", server));
             return;
         }
-        reactions.broadcast(messages.prefixed(key, "player", who.getName(), "server", server), who, ReactionService.HI);
+        reactions.broadcast(own.isPresent()
+                        ? chat.prefixed(template, Chat.arg("player", who.getName()), Chat.arg("server", server))
+                        : messages.prefixed(key, "player", who.getName(), "server", server),
+                who, ReactionService.HI);
+    }
+
+    /** Their own line when they have one (Cosmetics' flair, through Core's JoinLines), else the server's. */
+    private String line(Player who, JoinLines.Kind kind, String key) {
+        return JoinLines.template(who.getUniqueId(), kind, messages.raw(key));
     }
 
     /**
@@ -75,7 +87,7 @@ public final class WelcomeService implements IEssentialsService {
         if (!settings.joinQuitEnabled()) {
             return false;
         }
-        chat.broadcast(to, messages.raw("essentials.welcome.quit"), Chat.arg("player", who.getName()));
+        chat.broadcast(to, line(who, JoinLines.Kind.QUIT, "essentials.welcome.quit"), Chat.arg("player", who.getName()));
         return true;
     }
 
@@ -84,13 +96,13 @@ public final class WelcomeService implements IEssentialsService {
         if (!settings.joinQuitEnabled()) {
             return false;
         }
-        chat.broadcast(to, messages.raw("essentials.welcome.joined"), Chat.arg("player", who.getName()));
+        chat.broadcast(to, line(who, JoinLines.Kind.JOIN, "essentials.welcome.joined"), Chat.arg("player", who.getName()));
         return true;
     }
 
     public void quit(Player who) {
         if (settings.joinQuitEnabled()) {
-            chat.broadcast(messages.raw("essentials.welcome.quit"),
+            chat.broadcast(line(who, JoinLines.Kind.QUIT, "essentials.welcome.quit"),
                     Chat.arg("player", who.getName()));
         }
     }
