@@ -122,4 +122,36 @@ class WelcomeServiceTest {
 
         verify(chat).broadcast(eq("<gold>Welcome <player>!"), any(net.kyori.adventure.text.minimessage.tag.resolver.TagResolver[].class));
     }
+
+    @Test
+    @DisplayName("everybody logging on is greeted by name with a title of their own, in the server's words")
+    void greetedWithATitle() {
+        when(ada.getName()).thenReturn("Ada");
+        when(messages.raw("essentials.welcome.title")).thenReturn("<white>Welcome home, <player>");
+        when(messages.get(eq("essentials.welcome.title"), any(Object[].class)))
+                .thenReturn(net.kyori.adventure.text.Component.text("Welcome home, Ada"));
+        when(messages.get(eq("essentials.welcome.subtitle"), any(Object[].class)))
+                .thenReturn(net.kyori.adventure.text.Component.text("Glad to see you on Hyades!"));
+        WelcomeService welcome = new WelcomeService(messages, chat, mock(ReactionService.class),
+                EssentialsSettings.DEFAULTS, () -> "Hyades");
+
+        welcome.greet(ada);
+
+        org.mockito.ArgumentCaptor<net.kyori.adventure.title.Title> shown =
+                org.mockito.ArgumentCaptor.forClass(net.kyori.adventure.title.Title.class);
+        verify(ada).showTitle(shown.capture());
+        assertThat(net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
+                .serialize(shown.getValue().title())).isEqualTo("Welcome home, Ada");
+        assertThat(net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
+                .serialize(shown.getValue().subtitle())).isEqualTo("Glad to see you on Hyades!");
+        verify(messages).get(eq("essentials.welcome.subtitle"), eq("player"), any(), eq("server"), eq("Hyades"));
+    }
+
+    @Test
+    @DisplayName("an owner who blanks the title line has no title at all")
+    void blankTitleIsNone() {
+        when(messages.raw("essentials.welcome.title")).thenReturn(" ");
+        new WelcomeService(messages, chat, mock(ReactionService.class), EssentialsSettings.DEFAULTS).greet(ada);
+        verify(ada, never()).showTitle(any(net.kyori.adventure.title.Title.class));
+    }
 }

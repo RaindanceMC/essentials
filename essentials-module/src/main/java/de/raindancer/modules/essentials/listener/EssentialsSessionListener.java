@@ -39,6 +39,8 @@ public final class EssentialsSessionListener implements IEssentialsListener {
         }
     }
 
+    private static final long GREETING_DELAY_TICKS = 20L;
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -61,6 +63,12 @@ public final class EssentialsSessionListener implements IEssentialsListener {
 
     /** The welcome and, for somebody new to the whole network, the rules — on the player's own thread. */
     private void welcome(Player player, boolean firstJoin) {
+        // A moment after logging on, so the title is not spent behind the world still loading.
+        Scheduling.entityLater(services.plugin(), player, GREETING_DELAY_TICKS, () -> {
+            if (player.isOnline()) {
+                services.welcome().greet(player);
+            }
+        });
         // A vanished player's joining is nobody's business: Core keeps them hidden, and a line here would say it.
         if (!services.core().vanish().isVanished(player.getUniqueId())) {
             services.welcome().joined(player, firstJoin);

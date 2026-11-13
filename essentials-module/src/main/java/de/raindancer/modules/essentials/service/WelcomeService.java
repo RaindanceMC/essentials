@@ -8,6 +8,12 @@ import org.bukkit.entity.Player;
 
 
 
+import de.raindancer.core.ui.chat.Style;
+import de.raindancer.core.ui.text.Markup;
+import net.kyori.adventure.title.Title;
+
+import java.time.Duration;
+
 /**
  * The lines around joining and leaving.
  *
@@ -18,6 +24,9 @@ import org.bukkit.entity.Player;
  * whether these are said at all, and whether a first join gets its own line.
  */
 public final class WelcomeService implements IEssentialsService {
+
+    private static final Title.Times GREETING = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3500),
+            Duration.ofMillis(1000));
 
     private final Messages messages;
     private final Chat chat;
@@ -71,6 +80,21 @@ public final class WelcomeService implements IEssentialsService {
                         ? chat.prefixed(template, Chat.arg("player", who.getName()), Chat.arg("server", server))
                         : messages.prefixed(key, "player", who.getName(), "server", server),
                 who, ReactionService.HI);
+    }
+
+    /**
+     * A title of their own for everybody logging on: their name in the server's gradient, then the server. Said
+     * whether or not anybody else is told they joined; an owner who blanks the title line has none.
+     */
+    public void greet(Player who) {
+        if (messages.raw("essentials.welcome.title").isBlank()) {
+            return;
+        }
+        Markup name = Markup.of("<gradient:" + Style.brandFrom() + ":" + Style.brandTo() + ">" + who.getName()
+                + "</gradient>");
+        String server = serverName.get();
+        who.showTitle(Title.title(messages.get("essentials.welcome.title", "player", name, "server", server),
+                messages.get("essentials.welcome.subtitle", "player", name, "server", server), GREETING));
     }
 
     /** Their own line when they have one (Cosmetics' flair, through Core's JoinLines), else the server's. */
