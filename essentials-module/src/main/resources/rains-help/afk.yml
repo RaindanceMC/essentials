@@ -15,12 +15,12 @@ sections:
   - question: How do I mark myself AFK?
     title: Going AFK
     text: |
-      Type {run:/afk}. You are marked away at once; type it again, or simply move, talk or run a command, and you are back.
+      Type {run:/afk}. You are marked away at once; type it again, or move, talk, run a command or use an item, and you are back.
   - question: Does the server notice by itself?
     title: Automatic AFK
     when: essentials:afk-enabled
     text: |
-      Yes. After {setting:essentials:afk-timeout-seconds|seconds} without moving, chatting or typing a command you are marked AFK automatically.
+      Yes. After {setting:essentials:afk-timeout-seconds|seconds} without moving, chatting, typing a command or using an item, you are marked AFK.
       Coming back is just as automatic: the moment you do anything, you are present again. Yes, even if a mob pushed you — I prefer being wrong in your favour.
   - question: What do others see?
     title: What is shown

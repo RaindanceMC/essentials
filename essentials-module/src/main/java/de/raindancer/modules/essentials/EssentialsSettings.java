@@ -40,12 +40,11 @@ public record EssentialsSettings(
         int spawnWarmupSeconds,
 
         @In("essentials/afk") @Title("AFK detection")
-        @Describe("Whether standing still, not talking and not typing a command marks somebody AFK "
-                + "at all.")
+        @Describe("Whether somebody who does nothing for a while is marked AFK on their own.")
         boolean afkEnabled,
 
         @In("essentials/afk") @Title("Away after") @Range(min = 15, max = 7200)
-        @Describe("Seconds of no movement, chat or command before somebody is marked AFK.")
+        @Describe("Seconds without moving, chatting, typing a command or using an item before somebody is marked AFK.")
         int afkTimeoutSeconds,
 
         @In("essentials/afk") @Title("Announce it")

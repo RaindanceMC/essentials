@@ -6,7 +6,18 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.Input;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerEditBookEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerInputEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -114,6 +125,66 @@ public final class EssentialsSessionListener implements IEssentialsListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    // Hands. Cancelled events count too: a click into air arrives cancelled, and somebody trying to
+    // break a block in a claim that is not theirs is still at the keyboard.
+
+    /** Using an item, or clicking a block. Being pushed onto a pressure plate is not. */
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.PHYSICAL) {
+            services.afk().activity(event.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onInteractEntity(PlayerInteractEntityEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onAttack(PrePlayerAttackEntityEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onHotbar(PlayerItemHeldEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onSwapHands(PlayerSwapHandItemsEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getWhoClicked() instanceof Player player) {
+            services.afk().activity(player);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (event.getWhoClicked() instanceof Player player) {
+            services.afk().activity(player);
+        }
+    }
+
+    @EventHandler
+    public void onSign(SignChangeEvent event) {
+        services.afk().activity(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onBook(PlayerEditBookEvent event) {
         services.afk().activity(event.getPlayer());
     }
 
