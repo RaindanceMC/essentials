@@ -51,7 +51,7 @@ public final class SeenCommand implements IEssentialsCommand {
                 live.messages().send(sender, "essentials.usage", "usage", "/seen <player>");
                 return;
             }
-            openChooser(live, viewer, "Seen — who?");
+            openChooser(live, viewer, "Seen: who?");
             return;
         }
         for (OfflinePlayer them : Players.any(live.messages(), live.server(), sender, args[0])) {

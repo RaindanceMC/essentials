@@ -55,7 +55,7 @@ public final class RulesMenu extends PaginatedMenu<HouseRule> {
             lore.add("<red>" + escaped(de.raindancer.modules.essentials.service.RulesService.ladderInWords(rule.penalties())));
         }
         lore.add("");
-        lore.add(rule.enabled() ? "<green>shown to players" : "<red>switched off — kept, not shown");
+        lore.add(rule.enabled() ? "<green>shown to players" : "<red>switched off (kept, not shown)");
         lore.add("");
         lore.add("<dark_gray>click to edit");
         lore.add("<dark_gray>shift-click to switch " + (rule.enabled() ? "off" : "on"));

@@ -54,7 +54,7 @@ public final class NickCommand implements IEssentialsCommand {
 
     @Override
     public String describe() {
-        return "sets, or removes, what you are called instead of your own name — or, for staff, somebody else's";
+        return "sets, or removes, what you are called instead of your own name (for staff, somebody else's too)";
     }
 
     @Override

@@ -158,7 +158,7 @@ public final class NicknameBlocklist {
             return NicknameRule.BlockMatch.REPORTED;
         }
         log.warn("blocklist: section '{}' has action '{}', which is neither 'report' nor "
-                + "'ban' — treating it as 'report'.", categoryId, text);
+                + "'ban'. Treating it as 'report'.", categoryId, text);
         return NicknameRule.BlockMatch.REPORTED;
     }
 

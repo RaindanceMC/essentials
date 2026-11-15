@@ -273,7 +273,7 @@ public final class EssentialsStore {
         Optional<YamlConfiguration> read = store.readIfReadable();
         if (read.isEmpty()) {
             for (String problem : store.problems()) {
-                log.warn("essentials.yml: {} — keeping the nicknames and ignores held in memory.", problem);
+                log.warn("essentials.yml: {}. Keeping the nicknames and ignores held in memory.", problem);
             }
             return false;
         }

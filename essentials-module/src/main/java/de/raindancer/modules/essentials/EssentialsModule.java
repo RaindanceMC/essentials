@@ -333,7 +333,7 @@ public final class EssentialsModule implements FlexModule {
         try {
             de.raindancer.core.content.music.MusicPack pack = de.raindancer.core.content.music.MusicPack.offer(
                     context.plugin(), context.core().resourcePacks(), "Essentials", "rainsessentials",
-                    "Rain's Essentials — music on logging on");
+                    "Rain's Essentials: music on logging on");
             context.closeWith(pack::withdraw);
             return pack.tracks();
         } catch (java.io.IOException failure) {

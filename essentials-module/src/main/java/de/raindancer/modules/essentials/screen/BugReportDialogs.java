@@ -56,8 +56,8 @@ public final class BugReportDialogs {
     /** What kind of thing it is. */
     public void home() {
         List<DialogBody> body = List.of(DialogBody.item(new ItemStack(Material.WRITABLE_BOOK)).showTooltip(false)
-                .description(DialogBody.plainMessage(MINI.deserialize("<white>Found something broken, or wish "
-                        + "something worked differently? Tell the team — it lands right where they work on the "
+                .description(DialogBody.plainMessage(MINI.deserialize("<white>Found something broken, or want "
+                        + "something changed? Tell the team. It goes straight to where they work on the "
                         + "server."), TEXT_WIDTH - 40)).build());
         List<ActionButton> buttons = new ArrayList<>();
         kind(buttons, BugReports.Kind.BUG, "<red>");
@@ -93,7 +93,7 @@ public final class BugReportDialogs {
         body.add(DialogBody.plainMessage(MINI.deserialize(found.isEmpty()
                 ? "<white>Nothing is reported in " + Text.literal(area.name()) + " yet. <gray>Be the first."
                 : "<white>Already reported in " + Text.literal(area.name()) + ". <gray>Did one happen to you too? "
-                + "Press it — that counts you in (+1), so the team sees how many it hits."), TEXT_WIDTH));
+                + "Press it to add your +1, so the team sees how many it hits."), TEXT_WIDTH));
         List<ActionButton> buttons = new ArrayList<>();
         for (GitHubIssues.Issue issue : found) {
             String others = issue.plusOnes() == 0 ? "Nobody else has said they had it yet."
@@ -133,7 +133,7 @@ public final class BugReportDialogs {
                     String typedText = response.getText(TEXT) == null ? "" : response.getText(TEXT).strip();
                     if (typedTitle.isEmpty() || typedText.isEmpty()) {
                         then(() -> form(kind, area, typedTitle, typedText,
-                                typedTitle.isEmpty() ? "It needs a title." : "Say what happened, please."));
+                                typedTitle.isEmpty() ? "It needs a title." : "Say what happened."));
                         return;
                     }
                     then(() -> reports.report(viewer, kind, area, typedTitle, typedText));

@@ -16,7 +16,7 @@ class ScreenLineRuleTest {
     @Test
     @DisplayName("nobody away says so")
     void nobodyAway() {
-        assertThat(rule.away(List.of())).isEqualTo("<gold><bold>Away right now</bold></gold>\n<gray>Nobody — everybody is here");
+        assertThat(rule.away(List.of())).isEqualTo("<gold><bold>Away right now</bold></gold>\n<gray>Nobody, everybody is here");
     }
 
     @Test
@@ -46,7 +46,7 @@ class ScreenLineRuleTest {
                 "<gold><bold>Server rules</bold></gold>\n<gold>1. <white>Be kind\n<gold>2. <white>No griefing");
         List<String> many = IntStream.rangeClosed(1, 12).mapToObj(n -> "R" + n).toList();
         assertThat(rule.rules(many)).contains("<gold>9. <white>R9").doesNotContain("R10")
-                .endsWith("<dark_gray>+ 3 more — /rules");
+                .endsWith("<dark_gray>+ 3 more: /rules");
         assertThat(rule.rules(List.of("x".repeat(60)))).contains("x".repeat(31) + "…").doesNotContain("x".repeat(32));
     }
 
@@ -56,7 +56,7 @@ class ScreenLineRuleTest {
         assertThat(rule.you("Sky", false, 0)).isEqualTo(
                 "<gold><bold>You</bold></gold>\n<gray>Nickname <white>Sky\n<gray>Status <green>here\n<gray>Ignoring <white>nobody");
         assertThat(rule.you(null, true, 2)).isEqualTo(
-                "<gold><bold>You</bold></gold>\n<gray>Nickname <white>none — /nick\n<gray>Status <yellow>away\n<gray>Ignoring <white>2 players");
+                "<gold><bold>You</bold></gold>\n<gray>Nickname <white>none: /nick\n<gray>Status <yellow>away\n<gray>Ignoring <white>2 players");
         assertThat(rule.you(null, true, 1)).endsWith("<white>1 player");
     }
 }

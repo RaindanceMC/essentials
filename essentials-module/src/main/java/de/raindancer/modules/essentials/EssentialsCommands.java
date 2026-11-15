@@ -55,14 +55,14 @@ public final class EssentialsCommands {
                         .taking("<message>"),
                 ModuleCommand.of("ignore", "Blocks or unblocks somebody's private messages",
                                 new IgnoreCommand(EssentialsCommands::require))
-                        .taking("<player> — toggles", "list — who you have blocked"),
+                        .taking("<player>: toggles", "list: who you have blocked"),
                 ModuleCommand.of("unignore", "Lets somebody message you again, if you had blocked them",
                                 new UnignoreCommand(EssentialsCommands::require))
                         .taking("<player>"),
 
                 ModuleCommand.of("seen", "When somebody was last here, and for how long they have played",
                                 new SeenCommand(EssentialsCommands::require))
-                        .taking("<player>", "(nothing) — opens a list to pick from"),
+                        .taking("<player>", "(nothing): opens a list to pick from"),
                 ModuleCommand.of("list", "Everybody online, on every server of the network",
                         new ListCommand(EssentialsCommands::require))
                         .aliased("online"),
@@ -73,48 +73,48 @@ public final class EssentialsCommands {
                         new PlayersCommand(EssentialsCommands::require)),
                 ModuleCommand.of("player", "Opens one player's profile directly, by name",
                                 new PlayerCommand(EssentialsCommands::require))
-                        .taking("(nothing) — opens a list to pick from", "<name> — straight to theirs"),
+                        .taking("(nothing): opens a list to pick from", "<name>: straight to theirs"),
                 ModuleCommand.of("profile", "Your profile, or anybody's by name",
                                 new PlayerCommand(EssentialsCommands::require, true))
-                        .taking("(nothing) — your own", "<name> — theirs"),
+                        .taking("(nothing): your own", "<name>: theirs"),
 
                 ModuleCommand.of("nick", "Sets, or removes, what you are called instead of your own name",
                                 new NickCommand(EssentialsCommands::require))
-                        .taking("(nothing) — opens the nickname menu",
-                                "set <name> — colour allowed", "<name> — the same, directly",
-                                "clear — back to your own name", "off — the same",
-                                "blocklist — the blocklist editor, for whoever may manage it",
-                                "<player> <name> — somebody else's, for staff; <player> clear removes it"),
+                        .taking("(nothing): opens the nickname menu",
+                                "set <name>: colour allowed", "<name>: the same, directly",
+                                "clear: back to your own name", "off: the same",
+                                "blocklist: the blocklist editor, for whoever may manage it",
+                                "<player> <name>: somebody else's, for staff; <player> clear removes it"),
 
                 ModuleCommand.of("enchant", "Enchants the item in your hand, up to level 255 if you may",
                                 new EnchantCommand(EssentialsCommands::require))
-                        .taking("(nothing) — opens a list to pick from",
-                                "<enchantment> [level] [player] — level 0 or remove takes it off",
-                                "clear [player] — takes every enchantment off"),
+                        .taking("(nothing): opens a list to pick from",
+                                "<enchantment> [level] [player]: level 0 or remove takes it off",
+                                "clear [player]: takes every enchantment off"),
                 ModuleCommand.of("disenchant", "Takes enchantments off the item in your hand",
                                 new de.raindancer.modules.essentials.command.DisenchantCommand(EssentialsCommands::require))
-                        .taking("<enchantment> — that one off; tab shows what is on the item",
-                                "all — everything but curses",
-                                "<enchantment|all> <player> — somebody else's, for staff"),
+                        .taking("<enchantment>: that one off; tab shows what is on the item",
+                                "all: everything but curses",
+                                "<enchantment|all> <player>: somebody else's, for staff"),
                 ModuleCommand.of("repair", "Repairs the item in your hand",
                                 new RepairCommand(EssentialsCommands::require, false))
-                        .taking("[player] — somebody else's, for staff"),
+                        .taking("[player]: somebody else's, for staff"),
                 ModuleCommand.of("repairall", "Repairs everything you carry",
                                 new RepairCommand(EssentialsCommands::require, true))
-                        .taking("[player] — somebody else's, for staff"),
+                        .taking("[player]: somebody else's, for staff"),
                 ModuleCommand.of("token", "Hands out clear-sky and dawn tokens",
                                 new de.raindancer.modules.essentials.command.TokenCommand(EssentialsCommands::require))
-                        .taking("sky [player] [amount] — clears the rain where it is used",
-                                "dawn [player] [amount] — skips the night where it is used")
+                        .taking("sky [player] [amount]: clears the rain where it is used",
+                                "dawn [player] [amount]: skips the night where it is used")
                         .auditUsage(),
 
-                ModuleCommand.of("afk", "Marks you away from the keyboard, or back, right now",
+                ModuleCommand.of("afk", "Marks you away from the keyboard, or back",
                         new AfkCommand(EssentialsCommands::require)),
 
                 ModuleCommand.of("roast", "Says a random roast of somebody in chat, as you",
                                 new RoastCommand(EssentialsCommands::require))
-                        .taking("(nothing) — roasts yourself", "<player> — roasts them"),
-                ModuleCommand.of("joke", "Tells a random, truly terrible joke in chat, as you",
+                        .taking("(nothing): roasts yourself", "<player>: roasts them"),
+                ModuleCommand.of("joke", "Tells a random bad joke in chat, as you",
                         new JokeCommand(EssentialsCommands::require)),
                 ModuleCommand.of("bugreport", "Reports a bug, an idea or a problem to the team, or +1s a reported one",
                                 new de.raindancer.modules.essentials.command.BugReportCommand(
@@ -125,25 +125,25 @@ public final class EssentialsCommands {
                                 new de.raindancer.modules.essentials.command.JoinMusicCommand(
                                         () -> require().messages(), EssentialsCommands::requireJoinMusic))
                         .aliased("loginmusic")
-                        .taking("(nothing) — off, or back on", "on", "off"),
+                        .taking("(nothing): off, or back on", "on", "off"),
 
                 ModuleCommand.of("rules", "Shows the server's rules; staff edit them and their presets",
                                 new de.raindancer.modules.essentials.command.RulesCommand(EssentialsCommands::require))
-                        .taking("(nothing) — every rule", "<number> — one rule",
-                                "edit — the rule editor, for staff",
-                                "add <title> | <text> — a new rule at the end",
+                        .taking("(nothing): every rule", "<number>: one rule",
+                                "edit: the rule editor, for staff",
+                                "add <title> | <text>: a new rule at the end",
                                 "remove <number>",
-                                "punishment <number> <warn, mute 1h, ban 3d, ban> — what breaking it costs",
-                                "preset [list] — every preset",
-                                "preset show <name> — its rules, numbered",
-                                "preset take <name> <number> — add just that rule to yours",
-                                "preset apply <name> — replace every rule with the preset's",
-                                "preset save <name> [description] — keep the current rules as a preset",
+                                "punishment <number> <warn, mute 1h, ban 3d, ban>: what breaking it costs",
+                                "preset [list]: every preset",
+                                "preset show <name>: its rules, numbered",
+                                "preset take <name> <number>: add just that rule to yours",
+                                "preset apply <name>: replace every rule with the preset's",
+                                "preset save <name> [description]: keep the current rules as a preset",
                                 "preset delete <name>"),
                 ModuleCommand.of("admin", "Switches to your admin inventory and game mode, and back",
                                 new de.raindancer.modules.essentials.command.AdminCommand(EssentialsCommands::require))
                         .aliased("adminmode", "staffmode")
-                        .taking("(nothing) — in or out", "on", "off", "status")
+                        .taking("(nothing): in or out", "on", "off", "status")
                         .auditUsage());
     }
 

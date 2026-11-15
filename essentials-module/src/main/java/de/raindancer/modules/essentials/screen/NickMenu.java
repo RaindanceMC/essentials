@@ -62,7 +62,7 @@ public final class NickMenu extends Menu {
 
         band(MenuLayout.WHO, 4, Icons.head(viewer, "<white>" + viewer.getName(),
                 current.map(nick -> List.of("<gray>Known as: <white>" + nick))
-                        .orElse(List.of("<gray>No nickname set — shown as your own name."))));
+                        .orElse(List.of("<gray>No nickname set. Shown as your own name."))));
 
         band(MenuLayout.WHO, 2, enabled,
                 Icons.of(Material.NAME_TAG, "<white>Set a nickname",
@@ -127,7 +127,7 @@ public final class NickMenu extends Menu {
         OfflinePlayer target = services.server().getOfflinePlayer(who);
         Scheduling.entityLater(services.plugin(), viewer, 1L, () -> {
             String name = target.getName() == null ? who.toString() : target.getName();
-            de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "Nickname for " + name + " — clear takes it off", "",
+            de.raindancer.core.ui.prompt.AnvilInput.open(viewer, "Nickname for " + name + " (clear takes it off)", "",
                     de.raindancer.core.ui.prompt.Parsers.text(32),
                     typed -> Scheduling.entity(services.plugin(), viewer, () -> {
                         boolean off = typed.strip().equalsIgnoreCase("clear") || typed.strip().equalsIgnoreCase("off");

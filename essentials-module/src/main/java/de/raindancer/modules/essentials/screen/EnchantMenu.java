@@ -156,9 +156,9 @@ public final class EnchantMenu extends PaginatedMenu<Enchantment> {
     private static String reasonFor(Verdict verdict) {
         return switch (verdict.reason()) {
             case "essentials.enchant.wrong-item" ->
-                    "Does not fit this item — needs " + PermissionNodes.ENCHANT_ANY_ITEM;
+                    "Does not fit this item, needs " + PermissionNodes.ENCHANT_ANY_ITEM;
             case "essentials.enchant.nothing-held" -> "Hold something first";
-            default -> "Not allowed right now";
+            default -> "Not allowed";
         };
     }
 }

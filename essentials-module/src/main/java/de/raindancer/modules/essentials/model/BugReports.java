@@ -132,7 +132,7 @@ public final class BugReports {
 
     public static String title(Kind kind, String title, boolean prime) {
         String plain = title.strip();
-        return prime && kind == Kind.IDEA ? "💎 " + plain : plain;
+        return prime && kind == Kind.IDEA ? "★ " + plain : plain;
     }
 
     public static String body(Report report) {
@@ -147,7 +147,7 @@ public final class BugReports {
 
     /** "+1, this happened to me too": who, when, for which issue, and the same details as a report. */
     public static String plusOneComment(int number, String title, Context context) {
-        StringBuilder comment = new StringBuilder("+1 — **").append(context.name()).append("** had #")
+        StringBuilder comment = new StringBuilder("+1: **").append(context.name()).append("** had #")
                 .append(number).append(" (").append(title.replace("\n", " ")).append(") too.\n\n");
         comment.append("| | |\n|---|---|\n");
         table(comment, context);

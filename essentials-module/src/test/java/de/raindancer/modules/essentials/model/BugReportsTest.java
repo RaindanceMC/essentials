@@ -97,7 +97,7 @@ class BugReportsTest {
         org.assertj.core.api.Assertions.assertThat(BugReports.labels(BugReports.Kind.BUG, area, true))
                 .as("only ideas get the priority").doesNotContain(BugReports.PRIME_LABEL);
         org.assertj.core.api.Assertions.assertThat(BugReports.title(BugReports.Kind.IDEA, "  Pets can swim ", true))
-                .isEqualTo("💎 Pets can swim");
+                .isEqualTo("★ Pets can swim");
         org.assertj.core.api.Assertions.assertThat(BugReports.title(BugReports.Kind.BUG, "Pets drown", true))
                 .isEqualTo("Pets drown");
     }

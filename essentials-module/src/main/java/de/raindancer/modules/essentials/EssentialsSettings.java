@@ -68,7 +68,7 @@ public record EssentialsSettings(
         boolean nicknamesEnabled,
 
         @In("essentials/social") @Title("Longest a nickname may be") @Range(min = 2, max = 32)
-        @Describe("Characters, after colour and formatting are stripped away — what actually "
+        @Describe("Characters, counted after colour and formatting are stripped: what actually "
                 + "appears in chat and the player list.")
         int nicknameMaxLength,
 
@@ -125,12 +125,11 @@ public record EssentialsSettings(
         GameMode adminGameMode,
 
         @In("essentials/admin") @Title("Back to where you were")
-        @Describe("Leaving admin mode puts you back where you went in, so flying somewhere as admin "
-                + "is not a free trip for your survival side.")
+        @Describe("Leaving admin mode puts you back where you went in.")
         boolean adminReturnToPlace,
 
         @In("essentials/admin") @Title("Vanish while in admin mode")
-        @Describe("Going in vanishes you; coming out shows you again — unless you were vanished already.")
+        @Describe("Going in vanishes you. Coming out shows you again, unless you were vanished already.")
         boolean adminVanish,
 
         @In("essentials/admin") @Title("Keep admin items apart")
@@ -156,7 +155,7 @@ public record EssentialsSettings(
 
     public static final EssentialsSettings DEFAULTS =
             new EssentialsSettings(3, true, 300, true, true, true, true, 16, true, true,
-                    List.of("Hi {name}!", "Look who finally showed up — {name}!", "{name} has entered the chat",
+                    List.of("Hi {name}!", "Look who finally showed up, {name}!", "{name} has entered the chat",
                             "Welcome back {name}, we missed you (a bit)", "Oh no, it's {name}",
                             "Hey {name}, wipe your boots", "Yo {name}", "{name}! The legend returns",
                             "Hide your diamonds, {name} is here", "Howdy {name}"),
