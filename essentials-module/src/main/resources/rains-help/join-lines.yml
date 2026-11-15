@@ -2,7 +2,7 @@ id: join-lines
 title: Joining, leaving, greetings
 summary: The lines in chat when people arrive or leave, and the little buttons that say hi or congratulate.
 intro: |
-  Everyone likes being noticed. Mostly. Here is what the server says about arrivals and achievements.
+  What the server says in chat about arrivals, departures and advancements.
 icon: OAK_DOOR
 category: Chat & community
 order: 40
@@ -19,16 +19,16 @@ sections:
     title: First join
     when: essentials:welcome-first-join
     text: |
-      A player joining for the very first time gets a welcome broadcast of their own, on top of the ordinary join line.{if:essentials:rules-on-first-join} They are also shown the {topic:rules} right after.{/if}
+      A player joining for the first time gets a welcome broadcast of their own, in addition to the ordinary join line.{if:essentials:rules-on-first-join} They are also shown the {topic:rules} right after.{/if}
   - question: What is the Say Hi! button?
     title: Say Hi!
     when: essentials:welcome-say-hi
     text: |
-      Under somebody's join line everyone else gets a green <green>[Say Hi!]</green> button. One click puts a friendly greeting plus their name in chat, in your voice. Once per player per join; you cannot greet yourself.
+      Under somebody's join line everyone else gets a green <green>[Say Hi!]</green> button. One click puts a greeting with their name in chat, in your name. Once per player per join; you cannot greet yourself.
       The greeting is picked from {setting:essentials:welcome-greetings|count} possible lines.
   - question: What is the Congrats! button?
     title: Congrats!
     when: essentials:advancement-congrats
     text: |
-      When somebody earns an advancement, a gold <gold>[Congrats!]</gold> button appears under the line. Click it and a cheer plus their name goes to chat — once per advancement, never for your own.
+      When somebody earns an advancement, a gold <gold>[Congrats!]</gold> button appears under the line. Click it and a cheer with their name goes to chat. It works once per advancement and never for your own.
       It picks from {setting:essentials:advancement-congrats-phrases|count} phrases.

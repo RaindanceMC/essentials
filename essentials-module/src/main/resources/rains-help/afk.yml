@@ -2,7 +2,7 @@ id: afk
 title: Away from keyboard
 summary: How the server notices you stepped away, what everybody sees, and how to come back.
 intro: |
-  Went to make tea? Fine. Just let me, and everyone else, know — or let me notice by myself.
+  Stepping away? Tell everyone with a command, or let the server notice.
 icon: CLOCK
 category: Chat & community
 order: 30
@@ -21,13 +21,13 @@ sections:
     when: essentials:afk-enabled
     text: |
       Yes. After {setting:essentials:afk-timeout-seconds|seconds} without moving, chatting, typing a command or using an item, you are marked AFK.
-      Coming back is just as automatic: the moment you do anything, you are present again. Yes, even if a mob pushed you — I prefer being wrong in your favour.
+      Coming back is automatic too: as soon as you do anything, you are present again. Even a mob pushing you counts.
   - question: What do others see?
     title: What is shown
     text: |
       A grey <gray>[AFK]</gray> sits in front of your name on the nametag and in the player list.
-      {if:essentials:afk-broadcast}Going away and coming back are also announced in chat.{else}It is kept quiet: nothing is announced in chat, only you get a short note.{/if}
-      Other features can ask whether you are away — for example an economy that pays passive income only to people who are actually there.
+      {if:essentials:afk-broadcast}Going away and coming back are also announced in chat.{else}Nothing is announced in chat. Only you get a short note.{/if}
+      Other features can ask whether you are away, for example an economy that pays passive income only to players who are there.
   - question: Is AFK switched off here?
     title: If it is off
     when: "!essentials:afk-enabled"

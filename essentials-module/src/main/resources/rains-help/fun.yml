@@ -1,8 +1,8 @@
 id: fun
 title: Roasts and jokes
-summary: Two chat commands that make you look hilarious, or at least brave.
+summary: Two chat commands that post a random roast or a random joke.
 intro: |
-  Comedy, as a service. Quality not guaranteed.
+  Two commands for a laugh in chat.
 icon: CAKE
 category: Chat & community
 order: 50
@@ -21,14 +21,14 @@ sections:
     title: /joke
     when: essentials:joke-enabled
     text: |
-      {run:/joke} tells a terrible joke in chat, in your name. Terrible on purpose; the worse, the better.
+      {run:/joke} tells a terrible joke in chat, in your name. The jokes are bad on purpose.
   - question: Is there a waiting time?
     title: Cooldown
     when: essentials:roast-enabled || essentials:joke-enabled
     text: |
-      {if:essentials:fun-cooldown-seconds > 0}You wait {setting:essentials:fun-cooldown-seconds|seconds} between two lines — a roast right after a joke counts too — and the wait follows you across the network.{else}No waiting at all on this server. The audience has been warned.{/if}{if:@perm:essentials.fun.no-cooldown} You are exempt from it.{/if}
+      {if:essentials:fun-cooldown-seconds > 0}You wait {setting:essentials:fun-cooldown-seconds|seconds} between two lines (a roast right after a joke counts too), and the wait follows you across the network.{else}There is no waiting time on this server.{/if}{if:@perm:essentials.fun.no-cooldown} You are exempt from it.{/if}
   - question: Why does it say it is switched off?
     title: If it is switched off
     when: "!essentials:roast-enabled || !essentials:joke-enabled"
     text: |
-      Each of the two can be switched off on its own. If one answers "comedy has been cancelled", that is the owner's decision, not mine.
+      Each of the two can be switched off on its own. If one says it is switched off, the owner turned it off.

@@ -1,8 +1,8 @@
 id: item-tools
 title: Enchanting and repairing
-summary: "Taking enchantments off — and, for staff, enchanting past vanilla limits and repairing on command."
+summary: "Taking enchantments off and, for staff, enchanting past vanilla limits and repairing on command."
 intro: |
-  Everyone may undo an enchantment. Adding them, and mending things by decree, is for the people with the right badge.
+  Everyone may remove an enchantment. Adding enchantments and repairing by command is for staff.
 icon: ENCHANTED_BOOK
 category: Items & enchantments
 order: 5
@@ -16,14 +16,14 @@ sections:
     title: /disenchant
     permission: essentials.disenchant
     text: |
-      Hold the item and type {cmd:/disenchant [enchantment]} — tab-completion shows exactly what is on it. {cmd:/disenchant all} removes everything at once.
-      <b>Curses stay.</b> Binding and Vanishing do not come off by command, or a cursed helmet would be one line away from gone.{if:@perm:essentials.disenchant.curses} You may remove curses too.{/if}
+      Hold the item and type {cmd:/disenchant [enchantment]}. Tab completion shows what is on it. {cmd:/disenchant all} removes everything at once.
+      <b>Curses stay.</b> Binding and Vanishing do not come off by command.{if:@perm:essentials.disenchant.curses} You may remove curses too.{/if}
       An item without that enchantment is left as it is.
   - question: How do I enchant my item?
     title: /enchant
     permission: essentials.enchant
     text: |
-      Hold it and type {cmd:/enchant [enchantment] [level]}. {run:/enchant} alone opens a picker. Level 0 — or the word <b>remove</b> — takes it off, and {cmd:/enchant clear} strips everything.
+      Hold it and type {cmd:/enchant [enchantment] [level]}. {run:/enchant} alone opens a picker. Level 0 or the word <b>remove</b> takes it off, and {cmd:/enchant clear} strips everything.
       Without extra permission, the enchantment must fit the item and its level may not go past what vanilla allows. On a book it is stored the way an anvil expects.
   - question: What may I do beyond vanilla?
     title: Beyond the limits

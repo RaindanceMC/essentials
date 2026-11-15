@@ -2,7 +2,7 @@ id: players
 title: Finding players
 summary: Who is online, where somebody is, when they were last here, and everybody the server has ever met.
 intro: |
-  Looking for somebody? I know everybody who ever walked in, including the ones who left in a huff.
+  Who is online, where somebody is, and everybody who has ever joined.
 icon: PLAYER_HEAD
 category: Chat & community
 order: 10
@@ -29,10 +29,10 @@ sections:
   - question: How do I browse every player?
     title: /players
     text: |
-      {run:/players} opens a list of every player this server has ever seen — online ones first, offline ones included. Pick one and their profile opens: message them, teleport requests and whatever else is installed, one click away.
-      {cmd:/player [name]} jumps straight to a profile by name, and so does {cmd:/profile [name]} — {run:/profile} alone is your own. Anybody may look at anybody's: their face, when they were last here, how long they played, and the buttons for them.
+      {run:/players} opens a list of every player this server has ever seen, online ones first, offline ones included. Pick one and their profile opens, with buttons to message them, send a teleport request and whatever else is installed.
+      {cmd:/player [name]} jumps straight to a profile by name, and so does {cmd:/profile [name]}. {run:/profile} alone is your own. Anybody may look at anybody's: their face, when they were last here, how long they played, and the buttons for them.
   - question: Who may see the exact coordinates?
     title: Coordinates
     permission: essentials.where.location
     text: |
-      You may. {cmd:/where [player]} shows you the world and block coordinates as well as the server. Treat it with the respect it deserves.
+      You may. {cmd:/where [player]} shows you the world and block coordinates as well as the server. Treat it with care.

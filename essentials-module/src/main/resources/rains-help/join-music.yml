@@ -2,7 +2,7 @@ id: join-music
 title: Music on logging on
 summary: The short piece of music you hear when you log on, and how to switch it off.
 intro: |
-  When you log on, a piece of music plays — just for you, nobody else hears it.
+  When you log on, a piece of music plays. Only you hear it.
 icon: JUKEBOX
 category: Chat & community
 order: 35
@@ -19,7 +19,7 @@ sections:
   - question: Why don't I hear anything?
     title: No music?
     text: |
-      The music comes with the server's resource pack — if you did not accept it, there is nothing to play. Check your jukebox volume too (Music & Sounds, "Jukebox/Note Blocks").
+      The music comes with the server's resource pack. If you did not accept it, there is nothing to play. Check your jukebox volume too (Music & Sounds, "Jukebox/Note Blocks").
   - question: How do staff set it up?
     title: For staff
     text: |
