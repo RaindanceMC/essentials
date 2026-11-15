@@ -5,10 +5,10 @@ essentials:
   only-a-player: "<red>Only a player can do that."
   no-permission: "<red>You may not do that."
   usage: "<gray>Usage: <white><usage>"
-  no-such-player: "<red>The server has never seen anybody called <white><player></white>. <gray>Check the spelling — Tab completes names."
+  no-such-player: "<red>The server has never seen anybody called <white><player></white>. <gray>Check the spelling. Tab completes names."
   no-such-player-maybe: "<red>The server has never seen anybody called <white><player></white>. <gray>Did you mean <white><maybe></white>?"
   player:
-    offline: "<red><white><player></white> is offline right now."
+    offline: "<red><white><player></white> is offline."
     selector-refused: "<red>Selectors like <white><selector></white> are not yours to use here, or that one is malformed. Type a name instead."
     ambiguous: "<red><white><selector></white> matches <white><count></white> players, and this wants exactly one."
   already-travelling: "<red>You are already on your way somewhere."
@@ -19,9 +19,9 @@ essentials:
   # ── /spawn and /setspawn ─────────────────────────────────────────────────
   spawn:
     not-set: "<red>No spawn point has been set yet."
-    world-gone: "<red>Spawn's world is not loaded right now."
+    world-gone: "<red>Spawn's world is not loaded."
     warming-up: "<gray>Heading to spawn in <white><seconds></white>…"
-    arrived: "<green>You have arrived at spawn. Home sweet default."
+    arrived: "<green>You have arrived at spawn."
     set: "<green>Spawn is now here."
     cancelled:
       moved: "<yellow>You moved, so the trip to spawn was cancelled."
@@ -30,14 +30,14 @@ essentials:
 
   # ── private messages ─────────────────────────────────────────────────────
   msg:
-    not-yourself: "<red>You cannot message yourself. Try a notebook."
+    not-yourself: "<red>You cannot message yourself."
     sent: "<gray>[me → <white><player></white>] <text>"
     received: "<gray>[<white><player></white> → me] <text>"
-    nobody-to-reply-to: "<red>Nobody has messaged you yet. Popularity takes time. <gray>Start a conversation with <white>/msg [player] [text]</white>."
+    nobody-to-reply-to: "<red>Nobody has messaged you yet. <gray>Start a conversation with <white>/msg [player] [text]</white>."
 
   # ── ignoring ──────────────────────────────────────────────────────────────
   ignore:
-    started: "<green>You will no longer see messages from <white><player></white>. Blissful silence."
+    started: "<green>You will no longer see messages from <white><player></white>."
     stopped: "<green>You can hear from <white><player></white> again."
     not-ignoring: "<gray>You were not ignoring <white><player></white>."
     none: "<gray>You are not ignoring anybody."
@@ -74,11 +74,11 @@ essentials:
     cleared: "<green>Back to your own name."
     blank: "<red>A nickname cannot be blank."
     too-long: "<red>That is too long. <white><detail></white> characters at most, not counting colour."
-    taken: "<red><white><detail></white> is somebody's real name. Pick another — identity theft is frowned upon."
+    taken: "<red><white><detail></white> is somebody's real name. Pick another."
     blocked: "<red>That name is not allowed here. Pick another."
     selector-like: "<red>A nickname starting with <white>@</white> would make every command think you meant @a and friends. Try it without."
-    command-like: "<red>A nickname cannot start with <white>/</white> — the server would read it as a command."
-    nick-taken: "<red>Somebody already goes by <white><detail></white>. Two of them would make every <white>/msg</white> ambiguous, so pick another."
+    command-like: "<red>A nickname cannot start with <white>/</white>. The server would read it as a command."
+    nick-taken: "<red>Somebody already goes by <white><detail></white>. Pick another, so <white>/msg</white> stays unambiguous."
     not-saved: "<red>Your nickname could not be saved just now. Try again in a moment."
     # Staff setting and clearing somebody else's.
     not-others: "<red>Other people's nicknames are staff business. You may change your own."
@@ -96,14 +96,14 @@ essentials:
   enchant:
     unknown: "<red>There is no enchantment called <white><enchantment></white>. Tab completion shows the available ones."
     unknown-maybe: "<red>There is no enchantment called <white><enchantment></white>. <gray>Did you mean <white><maybe></white>?"
-    nobody-there: "<red>Nobody here answers to <white><player></white>."
+    nobody-there: "<red>No player called <white><player></white> is here."
     nothing-held: "<red>Nothing in the hand to enchant."
     not-others: "<red>Enchanting what somebody else is holding is staff business."
     wrong-item: "<red><white><enchantment></white> cannot be applied to that item."
-    too-high: "<red>Vanilla stops at <white><detail></white> for that enchantment, and so do you, without the beyond-max permission."
+    too-high: "<red>The vanilla maximum for that enchantment is <white><detail></white>. Going higher needs the beyond-max permission."
     level-range: "<red>Levels run from <white>1</white> to <white>255</white>, and <white>0</white> takes it off."
     not-on-item: "<red>That enchantment is not on the item, so there is nothing to take off."
-    applied: "<green>Done: <white><enchantment></white> on your <white><item></white>. Shiny."
+    applied: "<green>Done: <white><enchantment></white> on your <white><item></white>."
     removed: "<green><white><enchantment></white> is off your <white><item></white>."
     applied-other: "<green><white><enchantment></white> is now on <white><player></white>'s <white><item></white>."
     removed-other: "<green><white><enchantment></white> is off <white><player></white>'s <white><item></white>."
@@ -119,8 +119,8 @@ essentials:
 
   # ── /repair and /repairall ────────────────────────────────────────────────
   tokens:
-    sky-cleared: "<yellow><player></yellow> <gray>used a Clear Sky Token. The clouds have somewhere else to be."
-    dawn-came: "<yellow><player></yellow> <gray>used a Dawn Token. Good morning."
+    sky-cleared: "<yellow><player></yellow> <gray>cleared the sky with a Clear Sky Token."
+    dawn-came: "<yellow><player></yellow> <gray>skipped the night with a Dawn Token."
     no-sky: "<red>There is no sky here to change. Your token is still yours."
     already-clear: "<gray>The sky is already clear. Your token is still yours."
     already-day: "<gray>It is already day. Your token is still yours."
@@ -129,11 +129,11 @@ essentials:
     not-online: "<red><white><player></white> is not online right now."
     cannot-make: "<red>The token item could not be made. The console says why."
   repair:
-    nobody-there: "<red>Nobody here answers to <white><player></white>."
+    nobody-there: "<red>No player called <white><player></white> is here."
     not-others: "<red>Repairing somebody else's things is staff business."
     not-all: "<red>Repairing the whole inventory at once is not permitted for you. Repair one item at a time."
     nothing-held: "<red>Your hands are empty. There is nothing to repair."
-    not-damageable: "<red>That cannot wear out, so there is nothing to repair. Dirt is immortal."
+    not-damageable: "<red>That cannot wear out, so there is nothing to repair."
     already-fine: "<gray>It is already in perfect condition."
     hand: "<green>Your <white><item></white> has been repaired."
     hand-other: "<green><white><player></white>'s <white><item></white> has been repaired."
@@ -161,57 +161,57 @@ essentials:
     went: "<gray>* <white><player></white> is now AFK."
     back: "<gray>* <white><player></white> is back."
     went-quiet: "<gray>You are now marked AFK."
-    back-quiet: "<gray>Welcome back. We kept your seat warm."
+    back-quiet: "<gray>Welcome back."
 
   # ── the Congrats! button under an advancement ────────────────────────────
   congrats:
     button: "<gold>[Congrats!]"
     tooltip: "<gray>Cheers them on in chat"
-    yourself: "<gray>Congratulating yourself? Respect the confidence. Let the others do it, though."
+    yourself: "<gray>You cannot congratulate yourself. Let the others do it."
     already: "<gray>You already cheered."
 
   # ── joining and leaving ───────────────────────────────────────────────────
   welcome:
-    first-join: "<gold>Welcome <white><player></white> to <white><server></white> for the first time!"
+    first-join: "<gold>Welcome <white><player></white> to <white><server></white> for the first time."
     joined: "<gray>+ <white><player></white> joined."
     # A title for everybody logging on, only to them. A blank title line switches it off.
     title: "<white>Welcome home, <player>"
-    subtitle: "<gray>Glad to see you on <white><server></white>!"
+    subtitle: "<gray>Glad to see you on <white><server></white>."
     hi-button: "<green>[Say Hi!]"
     hi-tooltip: "<gray>Says hello to them in chat"
-    hi-yourself: "<gray>Saying hi to yourself? Bold move. Maybe let the others do it."
+    hi-yourself: "<gray>You cannot say hi to yourself. Let the others do it."
     hi-already: "<gray>You already said hi."
     quit: "<gray>- <white><player></white> left."
 
   # ── /rules ────────────────────────────────────────────────────────────────
   # <title> and <text> are the rule's own words, shown exactly as written.
   rules:
-    header: "<gold>The rules. Yes, all of them."
-    line: "<gold><number>.</gold> <white><title></white> <gray>— <text>"
-    line-off: "<dark_gray><number>. <strikethrough><title></strikethrough> (switched off) — <text>"
+    header: "<gold>Server rules"
+    line: "<gold><number>.</gold> <white><title></white><gray>: <text>"
+    line-off: "<dark_gray><number>. <strikethrough><title></strikethrough> (switched off): <text>"
     penalties: "<dark_gray>    ↳ breaking it: <red><penalties>"
     type-penalties: "<gray>Type what breaking it costs, first time first: <white>warn, mute 1h, ban 3d, ban</white>. <dark_gray>Kinds: warn, kick, mute, freeze, ban; a ban without a length is for good. You have a minute."
-    penalties-set: "<green>Breaking it now costs — <white><penalties></white>."
+    penalties-set: "<green>Breaking it now costs: <white><penalties></white>."
     penalties-cleared: "<yellow>No fixed punishment for it any more; staff decide each time."
     penalties-unreadable: "<red><white><typed></white> is not a punishment ladder. Write it like <white>warn, mute 1h, ban 3d, ban</white>."
-    none: "<gray>No rules yet. Technically, that makes this anarchy."
-    no-such: "<red>There is no rule <white><number></white>. Count again."
+    none: "<gray>There are no rules yet."
+    no-such: "<red>There is no rule <white><number></white>."
     edit-button: "<gold>[Edit the rules]"
     edit-tooltip: "<gray>Opens the rule editor"
     type-title: "<gray>Type the rule's title in chat. <dark_gray>You have a minute."
     type-text: "<gray>Now type what the rule says. <dark_gray>You have a minute."
     type-preset-name: "<gray>Type a name for the preset. <dark_gray>Letters, digits and dashes; you have a minute."
     already-asking: "<red>You are already being asked something else. Finish that conversation first."
-    blank: "<red>That is empty. Rules need words, ideally several."
-    too-long: "<red>Too long — <white><limit></white> characters at most. Brevity is a virtue, and also a limit."
+    blank: "<red>That is empty."
+    too-long: "<red>Too long: <white><limit></white> characters at most."
     added: "<green>Rule <white><number></white> added: <white><title></white>."
     saved: "<green>Saved."
-    gone: "<red>That rule is gone — somebody removed it in the meantime."
+    gone: "<red>That rule is gone. Somebody removed it in the meantime."
     removed: "<yellow>Removed the rule <white><title></white>."
     icon-empty-hand: "<red>Your hand is empty. Hold the item you want as the icon, then right-click again."
     preset:
       header: "<gold>Rule presets:"
-      line: "<white><name></white> <gray>— <description> (<count> rules)"
+      line: "<white><name></white><gray>: <description> (<count> rules)"
       none: "<gray>No presets. Keep the current rules as one with <white>/rules preset save [name]</white>."
       no-such: "<red>There is no preset called <white><name></white>."
       bad-name: "<red><white><name></white> cannot be a preset name. Letters, digits and dashes only."
@@ -225,33 +225,33 @@ essentials:
       confirm-button: "<red>[Yes, do it]"
       showing: "<gold>Rules in the preset <white><name></white>:"
       took: "<green>Added <white><title></white> as rule <white><number></white>."
-      already-have: "<gray>You already have <white><title></white>. Once is enough, even for good advice."
+      already-have: "<gray>You already have <white><title></white>."
 
   # ── /gamemode ─────────────────────────────────────────────────────────────
   gamemode:
-    not-this-one: "<red>Not <white><mode></white> for you. <gray>Your rank allows other game modes, just not this one."
+    not-this-one: "<red>You may not switch to <white><mode></white>. <gray>Your rank allows other game modes, just not this one."
 
   # ── /admin ────────────────────────────────────────────────────────────────
   admin:
-    entered: "<green>Admin mode on. <gray>Your own things are packed away safely; <white>/admin</white> brings them back. <dark_gray>Bypass and claim bypass are on."
-    left: "<green>Admin mode off. <gray>Everything is back exactly where you left it."
-    already-in: "<gray>You are already in admin mode. Any more admin and you would be the server."
+    entered: "<green>Admin mode on. <gray>Your own inventory is stored; <white>/admin</white> brings it back. <dark_gray>Bypass and claim bypass are on."
+    left: "<green>Admin mode off. <gray>Your own inventory is back."
+    already-in: "<gray>You are already in admin mode."
     not-in: "<gray>You are not in admin mode."
     still-in: "<yellow>You are still in admin mode. <gray><white>/admin</white> to leave it."
     status-in: "<yellow>You are in admin mode."
     status-out: "<gray>You are not in admin mode."
-    bypass-on: "<gold>Bypass on: <gray>admin items are not kept apart for you — drop, pick up, store, trade. <dark_gray>Logged. /admin bypass again to stop."
+    bypass-on: "<gold>Bypass on: <gray>admin items are not kept apart for you (drop, pick up, store, trade). <dark_gray>Logged. /admin bypass again to stop."
     bypass-off: "<green>Bypass off: <gray>admin items are kept apart again."
     bypass-not-in: "<red>Bypass is for admin mode. <gray><white>/admin</white> first."
     switched-off: "<red>Admin mode is switched off on this server."
     permission-gone: "<yellow>You may no longer use admin mode, so you are back in your own inventory."
     other-on: "<green>Switched admin mode on for <white><player></white>."
     other-off: "<green>Switched admin mode off for <white><player></white>."
-    other-offline: "<gray><player> is not online here. Admin mode is hard to put on somebody who is not around."
+    other-offline: "<gray><player> is not online here, so their admin mode cannot be switched."
     other-refused: "<red>Could not switch <white><player></white>'s admin mode <gray>(they were told why)."
     could-not-save: "<red>Could not write the inventory to disk, so nothing was switched. The console says why."
     unreadable: "<red><white><count></white> item(s) there cannot be read by this server right now, so nothing was switched. Switching would lose them."
-    bar: "<red><bold>ADMIN MODE</bold></red> <gray>— /admin to leave"
+    bar: "<red><bold>ADMIN MODE</bold></red> <gray>(/admin to leave)"
     file-broken: "<red>Your admin-mode file cannot be read, so you stay in admin mode until staff fix it. Nothing was switched."
     kept-apart: "<red>Admin items stay on the admin side. <gray>Leave admin mode with <white>/admin</white> for that."
     look-only: "<gray>Admin mode: you can look in here, but not take or put anything."
@@ -261,8 +261,8 @@ essentials:
   # Dealt like cards: every line comes round once before any repeats. Add, remove or reword freely.
   fun:
     # <command> is roast or joke.
-    switched-off: "<red>/<command> is switched off on this server. Comedy has been cancelled."
-    cooling-down: "<yellow>Give the audience <white><seconds>s</white> to recover first. Timing is everything."
+    switched-off: "<red>/<command> is switched off on this server."
+    cooling-down: "<yellow>You can do that again in <white><seconds>s</white>."
     # <target> is who is being roasted; without a name, the one asking roasts themselves.
     roasts:
       - "<target>, you mine straight down and call it a strategy."
@@ -405,12 +405,12 @@ essentials:
       - "Why can't you trust stairs? They are always up to something."
   bugreport:
     switched-off: "<gray>Bug reports are switched off on this server."
-    not-set-up: "<gray>Bug reports are not set up here yet — tell the team in chat for now."
+    not-set-up: "<gray>Bug reports are not set up here yet. Tell the team in chat for now."
     wait: "<yellow>You just sent one. The next one in <white><seconds></white> seconds."
     sending: "<gray>Sending your report…"
-    sent: "<green>Thank you! Your report is <white>#<number></white> — the team will look at it."
+    sent: "<green>Thank you. Your report is <white>#<number></white>. The team will look at it."
     failed: "<red>That did not reach the team (<reason>). Try again in a minute."
-    plus-one: "<green>Counted on <white>#<number></white> — thank you for telling us."
+    plus-one: "<green>Counted on <white>#<number></white>. Thank you for telling us."
     plus-one-already: "<gray>You have already said you had <white>#<number></white>."
     loading-failed: "<red>The reports could not be loaded (<reason>)."
     reminder: "<gray>Found a bug, or have an idea? <yellow><click:run_command:'/bugreport'><hover:show_text:'<gray>Click to report it'>/bugreport</hover></click></yellow> <gray>sends it straight to the team."
