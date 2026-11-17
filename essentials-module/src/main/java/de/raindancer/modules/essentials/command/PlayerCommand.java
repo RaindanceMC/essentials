@@ -15,25 +15,15 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * {@code /player <name>} — straight to that one player's profile, for whoever already knows who
- * they want rather than browsing {@code /players}' list for them. Bare {@code /player} is the same
- * list {@code /players} opens; the two commands are two doors onto the one feature; picking a name
- * out of chat or typing it here both land on the same {@link ProfileMenu}.
+ * {@code /profile [name]} — your own profile, or straight to somebody's by name. Picking a name out of
+ * {@code /players} or typing it here both land on the same {@link ProfileMenu}.
  */
 public final class PlayerCommand implements IEssentialsCommand {
 
     private final Supplier<EssentialsServices> services;
 
-    /** Bare {@code /profile} is your own profile; bare {@code /player} the list to pick from. */
-    private final boolean bareIsOwn;
-
     public PlayerCommand(Supplier<EssentialsServices> services) {
-        this(services, false);
-    }
-
-    public PlayerCommand(Supplier<EssentialsServices> services, boolean bareIsOwn) {
         this.services = services;
-        this.bareIsOwn = bareIsOwn;
     }
 
     @Override
@@ -47,14 +37,10 @@ public final class PlayerCommand implements IEssentialsCommand {
         CommandSender sender = source.getSender();
         if (args.length == 0) {
             if (!(sender instanceof Player viewer)) {
-                live.messages().send(sender, "essentials.usage", "usage", bareIsOwn ? "/profile <name>" : "/player <name>");
+                live.messages().send(sender, "essentials.usage", "usage", "/profile <name>");
                 return;
             }
-            if (bareIsOwn) {
-                new ProfileMenu(viewer, live.brand(), null, viewer.getUniqueId(), viewer.getName()).open();
-                return;
-            }
-            SeenCommand.openChooser(live, viewer, "Players");
+            new ProfileMenu(viewer, live.brand(), null, viewer.getUniqueId(), viewer.getName()).open();
             return;
         }
         Optional<OfflinePlayer> found = Players.one(live.messages(), live.server(), sender, args[0]);

@@ -38,4 +38,12 @@ class EssentialsCommandsTest {
         assertThat(named("rules").names()).contains("rules");
         assertThat(named("admin").names()).contains("admin", "adminmode", "staffmode");
     }
+
+    @Test
+    @DisplayName("/player is not declared: World Utils' player tools own it; /profile stays")
+    void playerBelongsToPlayerUtils() {
+        assertThat(EssentialsCommands.declared().stream().flatMap(command -> command.names().stream()))
+                .doesNotContain("player")
+                .contains("profile", "repair", "repairall");
+    }
 }

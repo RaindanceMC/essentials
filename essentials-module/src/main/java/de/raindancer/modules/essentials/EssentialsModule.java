@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.45.1")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.46.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -275,6 +275,18 @@ public final class EssentialsModule implements FlexModule {
         EssentialsCommands.ready(joinMusic);
         if (joinMusicSettings.current().enabled()) {
             log.info("Music on logging on: {} track(s).", joinTracks.size());
+        }
+
+        // Join music is a preference and spawn a door on /travel (Core 2.103.0); older Cores have /joinmusic and /spawn.
+        try {
+            de.raindancer.core.ui.preference.Preference joinMusicChoice = EssentialsOffers.joinMusic();
+            de.raindancer.core.ui.preference.Preferences.offer(context.plugin(), joinMusicChoice);
+            context.closeWith(() -> de.raindancer.core.ui.preference.Preferences.withdraw(joinMusicChoice));
+            de.raindancer.core.ui.travel.TravelDoor spawnDoor = EssentialsOffers.spawnDoor(spawn);
+            de.raindancer.core.ui.travel.TravelDoors.offer(context.plugin(), spawnDoor);
+            context.closeWith(() -> de.raindancer.core.ui.travel.TravelDoors.withdraw(spawnDoor));
+        } catch (LinkageError olderCore) {
+            log.info("RainsCore is older than 2.103.0: no join music preference and no spawn door on /travel.");
         }
 
         context.listener(new EssentialsSessionListener(services));
