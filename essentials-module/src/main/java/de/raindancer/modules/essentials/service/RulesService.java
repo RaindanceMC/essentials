@@ -122,9 +122,37 @@ public final class RulesService implements IEssentialsService {
 
     /** Somebody's very first join, if the owner wants the rules shown then. */
     public void firstJoin(Player player) {
-        if (settings.rulesOnFirstJoin() && !book.shown().isEmpty()) {
+        if (settings.rulesOnFirstJoin() && !book.shown().isEmpty() && !inTheWelcomeBook()) {
             show(player);
         }
+    }
+
+    /** Whether Core hands new players the welcome book, where the rules are a chapter instead of chat lines. */
+    private static boolean inTheWelcomeBook() {
+        try {
+            return de.raindancer.core.ui.book.WelcomeBook.takesOver();
+        } catch (LinkageError olderCore) {
+            return false;
+        }
+    }
+
+    /** The rules players see, as book pages; empty when the owner does not want them shown to new players. */
+    public List<String> welcomePages() {
+        return settings.rulesOnFirstJoin() ? de.raindancer.modules.essentials.rules.RulesBookRule.pages(book.shown())
+                : List.of();
+    }
+
+    /** {@code /rules} for a player: the rules as a book they read and close, nothing handed over. */
+    public void openBook(Player player) {
+        List<HouseRule> shown = book.shown();
+        if (shown.isEmpty()) {
+            messages.sendPlain(player, "essentials.rules.none");
+            return;
+        }
+        net.kyori.adventure.text.minimessage.MiniMessage mini = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage();
+        player.openBook(net.kyori.adventure.inventory.Book.book(net.kyori.adventure.text.Component.text("Rules"),
+                net.kyori.adventure.text.Component.text("Server"),
+                de.raindancer.modules.essentials.rules.RulesBookRule.pages(shown).stream().map(mini::deserialize).toList()));
     }
 
     // ------------------------------------------------------------------------------------ changing

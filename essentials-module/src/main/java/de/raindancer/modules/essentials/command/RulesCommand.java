@@ -48,6 +48,10 @@ public final class RulesCommand implements IEssentialsCommand {
         CommandSender sender = source.getSender();
         RulesService rules = live.rules();
         if (args.length == 0) {
+            if (sender instanceof org.bukkit.entity.Player player && !sender.hasPermission(PermissionNodes.RULES_MANAGE)) {
+                rules.openBook(player);
+                return;
+            }
             rules.show(sender);
             return;
         }

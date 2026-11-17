@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.47.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.48.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -297,6 +297,16 @@ public final class EssentialsModule implements FlexModule {
             context.closeWith(() -> de.raindancer.core.ui.travel.TravelDoors.withdraw(spawnDoor));
         } catch (LinkageError olderCore) {
             log.info("RainsCore is older than 2.103.0: no join music preference and no spawn door on /travel.");
+        }
+
+        // The rules are a chapter of the book new players are handed (Core 2.111.0), not lines in chat.
+        try {
+            de.raindancer.core.ui.book.BookChapter rulesChapter = new de.raindancer.core.ui.book.BookChapter(
+                    "essentials:rules", 10, "Rules", player -> rules.welcomePages());
+            de.raindancer.core.ui.book.WelcomeBook.offer(context.plugin(), rulesChapter);
+            context.closeWith(() -> de.raindancer.core.ui.book.WelcomeBook.withdraw(rulesChapter));
+        } catch (LinkageError olderCore) {
+            log.info("RainsCore is older than 2.111.0: the rules are shown in chat on a first join, not in a book.");
         }
 
         context.listener(new EssentialsSessionListener(services));

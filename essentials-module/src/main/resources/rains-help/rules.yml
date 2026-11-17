@@ -15,8 +15,8 @@ sections:
   - question: Where are the rules?
     title: Reading them
     text: |
-      {run:/rules} lists them all, numbered. {cmd:/rules [number]} shows a single one. Rules that staff have switched off are not shown to you.
-      {if:essentials:rules-on-first-join}New players are shown them automatically on their first join.{/if}
+      {run:/rules} opens them as a book, one rule a page. {cmd:/rules [number]} shows a single one in chat. Rules that staff have switched off are not shown to you.
+      {if:essentials:rules-on-first-join}New players find them in the book they are handed on their first join.{/if}
   - question: What happens if I break one?
     title: Punishments
     text: |
