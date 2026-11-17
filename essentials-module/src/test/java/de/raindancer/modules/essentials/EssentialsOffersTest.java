@@ -4,6 +4,7 @@ import de.raindancer.core.ui.preference.Preference;
 import de.raindancer.core.ui.travel.TravelDoor;
 import de.raindancer.modules.essentials.service.SpawnService;
 import de.raindancer.modules.essentials.util.PermissionNodes;
+import de.raindancer.core.ui.menu.Menu;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,5 +53,51 @@ class EssentialsOffersTest {
 
         when(player.hasPermission(PermissionNodes.SPAWN)).thenReturn(true);
         assertThat(door.locked().apply(player)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("the ignore list is a page for whoever may /ignore, and opens with /preferences as parent")
+    void ignoredPage() {
+        Player player = mock(Player.class);
+        Menu parent = mock(Menu.class);
+        java.util.List<Object> opened = new java.util.ArrayList<>();
+        Preference preference = EssentialsOffers.ignored((who, back) -> {
+            opened.add(who);
+            opened.add(back);
+        });
+
+        assertThat(preference.id()).isEqualTo("essentials:ignored");
+        assertThat(preference.title()).isEqualTo("People you ignore");
+        assertThat(preference.isPage()).isTrue();
+        preference.page().accept(player, parent);
+        assertThat(opened).containsExactly(player, parent);
+
+        when(player.hasPermission(PermissionNodes.IGNORE)).thenReturn(false);
+        assertThat(preference.shown().test(player)).isFalse();
+        when(player.hasPermission(PermissionNodes.IGNORE)).thenReturn(true);
+        assertThat(preference.shown().test(player)).isTrue();
+    }
+
+    @Test
+    @DisplayName("the nickname is a page for whoever may /nick, and opens with /preferences as parent")
+    void nicknamePage() {
+        Player player = mock(Player.class);
+        Menu parent = mock(Menu.class);
+        java.util.List<Object> opened = new java.util.ArrayList<>();
+        Preference preference = EssentialsOffers.nickname((who, back) -> {
+            opened.add(who);
+            opened.add(back);
+        });
+
+        assertThat(preference.id()).isEqualTo("essentials:nickname");
+        assertThat(preference.title()).isEqualTo("Your nickname");
+        assertThat(preference.isPage()).isTrue();
+        preference.page().accept(player, parent);
+        assertThat(opened).containsExactly(player, parent);
+
+        when(player.hasPermission(PermissionNodes.NICK)).thenReturn(false);
+        assertThat(preference.shown().test(player)).isFalse();
+        when(player.hasPermission(PermissionNodes.NICK)).thenReturn(true);
+        assertThat(preference.shown().test(player)).isTrue();
     }
 }

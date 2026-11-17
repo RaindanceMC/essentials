@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class EssentialsModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.46.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("essentials", "Essentials", "1.47.0")
             .describedAs("The boring stuff players immediately expect: /spawn, AFK, private "
                     + "messages, /seen, join and quit lines, a nickname, /rules, and /admin for staff")
             .by("Raindancer118");
@@ -282,6 +282,16 @@ public final class EssentialsModule implements FlexModule {
             de.raindancer.core.ui.preference.Preference joinMusicChoice = EssentialsOffers.joinMusic();
             de.raindancer.core.ui.preference.Preferences.offer(context.plugin(), joinMusicChoice);
             context.closeWith(() -> de.raindancer.core.ui.preference.Preferences.withdraw(joinMusicChoice));
+            de.raindancer.core.ui.preference.Preference ignoredPage = EssentialsOffers.ignored(
+                    (player, parent) -> new de.raindancer.modules.essentials.screen.IgnoredMenu(services, player, parent).open());
+            de.raindancer.core.ui.preference.Preference nicknamePage = EssentialsOffers.nickname(
+                    (player, parent) -> new de.raindancer.modules.essentials.screen.NickMenu(services, player, parent).open());
+            de.raindancer.core.ui.preference.Preferences.offer(context.plugin(), ignoredPage);
+            de.raindancer.core.ui.preference.Preferences.offer(context.plugin(), nicknamePage);
+            context.closeWith(() -> {
+                de.raindancer.core.ui.preference.Preferences.withdraw(ignoredPage);
+                de.raindancer.core.ui.preference.Preferences.withdraw(nicknamePage);
+            });
             de.raindancer.core.ui.travel.TravelDoor spawnDoor = EssentialsOffers.spawnDoor(spawn);
             de.raindancer.core.ui.travel.TravelDoors.offer(context.plugin(), spawnDoor);
             context.closeWith(() -> de.raindancer.core.ui.travel.TravelDoors.withdraw(spawnDoor));
