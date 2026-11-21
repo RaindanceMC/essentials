@@ -20,6 +20,13 @@ class JoinMusicRuleTest {
     }
 
     @Test
+    @DisplayName("gives way to the radio, or anything else the player hears above a greeting")
+    void givesWay() {
+        assertThat(JoinMusicRule.plays(true, true, true, false)).isTrue();
+        assertThat(JoinMusicRule.plays(true, true, true, true)).isFalse();
+    }
+
+    @Test
     @DisplayName("starts once the pack with the track is on, waits while it loads")
     void waitsForThePack() {
         assertThat(JoinMusicRule.step(PackStatus.LOADED, 2)).isEqualTo(Step.PLAY);

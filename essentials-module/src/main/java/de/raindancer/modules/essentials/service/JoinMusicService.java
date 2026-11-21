@@ -1,6 +1,7 @@
 package de.raindancer.modules.essentials.service;
 
 import de.raindancer.core.content.music.MusicSession;
+import de.raindancer.core.content.music.MusicStage;
 import de.raindancer.core.content.music.Track;
 import de.raindancer.core.content.pack.ResourcePacks;
 import de.raindancer.core.platform.util.Scheduling;
@@ -39,6 +40,7 @@ public final class JoinMusicService {
     private final Map<UUID, MusicSession> playing = new ConcurrentHashMap<>();
     private final Map<UUID, Long> startedAt = new ConcurrentHashMap<>();
     private final Map<UUID, Track> playingTrack = new ConcurrentHashMap<>();
+    private final Map<UUID, MusicStage.Cue> cues = new ConcurrentHashMap<>();
 
     public JoinMusicService(Plugin plugin, Supplier<JoinMusicSettings> settings, Supplier<List<Track>> tracks,
                             ResourcePacks packs, Messages messages, LongSupplier clock) {
@@ -56,7 +58,8 @@ public final class JoinMusicService {
 
     public void joined(Player player) {
         List<Track> own = tracks.get();
-        if (!JoinMusicRule.plays(settings.get().enabled(), WANTED.isOn(player), !own.isEmpty())) {
+        if (!JoinMusicRule.plays(settings.get().enabled(), WANTED.isOn(player), !own.isEmpty(),
+                MusicStage.outranked(player.getUniqueId(), MusicStage.Layer.GREETING))) {
             return;
         }
         UUID id = player.getUniqueId();
@@ -69,6 +72,12 @@ public final class JoinMusicService {
             }
             MusicSession session = playing.get(id);
             if (session == null) {
+                if (MusicStage.outranked(id, MusicStage.Layer.GREETING)) {
+                    // The radio came on while the pack was still loading: no greeting this time.
+                    runs.remove(id);
+                    task.cancel();
+                    return;
+                }
                 switch (JoinMusicRule.step(packs.statusOf(id), (clock.getAsLong() - run) / 1000.0)) {
                     case WAIT -> {
                     }
@@ -94,6 +103,17 @@ public final class JoinMusicService {
         startedAt.put(id, clock.getAsLong());
         playingTrack.put(id, track);
         playing.put(id, new MusicSession(player, player, List.of(track), true, "", live.volume() / 100f, clock));
+        // A greeting does not wait: whatever outranks it (the radio) ends it for good.
+        cues.put(id, MusicStage.enter(id, MusicStage.Layer.GREETING, new MusicStage.Part() {
+            @Override
+            public void hush() {
+                stop(id);
+            }
+
+            @Override
+            public void resume() {
+            }
+        }));
         if (live.credit() != null && !live.credit().isBlank()) {
             messages.send(player, "essentials.joinmusic.playing", "credit", live.credit().strip());
         } else {
@@ -128,6 +148,10 @@ public final class JoinMusicService {
         MusicSession session = playing.remove(player);
         if (session != null) {
             session.stop();
+        }
+        MusicStage.Cue cue = cues.remove(player);
+        if (cue != null) {
+            cue.leave();
         }
     }
 
