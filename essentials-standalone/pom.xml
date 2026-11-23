@@ -94,7 +94,7 @@
         <!-- 1.40.1: the join music settings have keys of their own (join-music.*), apart from the bug reports' enabled. -->
         <!-- 1.40.2: /list, /where and /seen name servers as players know them ("Hyades"), not by id ("beta"). -->
         <!-- 1.49.0: the music on logging on gives way to the radio (Core MusicStage); built against Core 2.115.0. -->
-        <plugin.version>1.49.0</plugin.version>
+        <plugin.version>1.49.1</plugin.version>
     </properties>
 
     <dependencies>

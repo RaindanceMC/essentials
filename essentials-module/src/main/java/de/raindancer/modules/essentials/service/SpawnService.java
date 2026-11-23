@@ -100,11 +100,6 @@ public final class SpawnService implements IEssentialsService {
         }
 
         @Override
-        public void arrived(Player traveller, Location destination, Trip trip) {
-            messages.send(traveller, "essentials.spawn.arrived");
-        }
-
-        @Override
         public void cancelled(Player traveller, TravelReason why, Trip trip) {
             messages.send(traveller, keyFor(why));
         }

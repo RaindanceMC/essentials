@@ -21,7 +21,6 @@ essentials:
     not-set: "<red>No spawn point has been set yet."
     world-gone: "<red>Spawn's world is not loaded."
     warming-up: "<gray>Heading to spawn in <white><seconds></white>…"
-    arrived: "<green>You have arrived at spawn."
     set: "<green>Spawn is now here."
     cancelled:
       moved: "<yellow>You moved, so the trip to spawn was cancelled."
@@ -234,7 +233,6 @@ essentials:
   # ── /admin ────────────────────────────────────────────────────────────────
   admin:
     entered: "<green>Admin mode on. <gray>Your own inventory is stored; <white>/admin</white> brings it back. <dark_gray>Bypass and claim bypass are on."
-    left: "<green>Admin mode off. <gray>Your own inventory is back."
     already-in: "<gray>You are already in admin mode."
     not-in: "<gray>You are not in admin mode."
     still-in: "<yellow>You are still in admin mode. <gray><white>/admin</white> to leave it."

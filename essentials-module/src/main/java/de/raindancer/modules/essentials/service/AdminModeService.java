@@ -259,7 +259,6 @@ public final class AdminModeService implements IEssentialsService {
         if (settings.adminReturnToPlace() && survival.place() != null) {
             moveTo.accept(player, survival.place());
         }
-        messages.send(player, "essentials.admin.left");
         return true;
     }
 

@@ -196,7 +196,7 @@ class AdminModeServiceTest {
         // Kept without a place: the admin side starts wherever its owner is, next time.
         assertThat(store.load(id, AdminModeService.ADMIN)).contains(ADMIN_NOW.withPlace(null));
         assertThat(movedTo).containsExactly(SURVIVAL.place());
-        verify(messages).send(player, "essentials.admin.left");
+        verify(messages, never()).send(eq(player), eq("essentials.admin.left"), any(Object[].class));
     }
 
     @Test
